@@ -20,7 +20,7 @@ namespace Backend.Features.Users.Login
 
         private string GenerateJwtToken(long userId)
         {
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("HIUGhdkciwlc16jcopojjOJNHDOlbpsmHCELVPOkcmdJOE"));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("JWT_SECRET")));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var claims = new List<Claim>
@@ -29,8 +29,8 @@ namespace Backend.Features.Users.Login
             };
 
             var token = new JwtSecurityToken(
-                issuer: "https://localhost:7236",
-                audience: "https://localhost:7236",
+                issuer: "https://localhost:7035",
+                audience: "https://localhost:7035",
                 claims: claims,
                 expires: DateTime.Now.AddMinutes(30),
                 signingCredentials: creds);
