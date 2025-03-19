@@ -1,5 +1,6 @@
 using Backend.Database;
 using Carter;
+using DotNetEnv;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -16,8 +17,16 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
+    c.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "MentorHub API",
+        Version = "v1",
+        Description = "API for MentorHub application"
+    });
 
-  
+    c.CustomSchemaIds(type => type.FullName);
+    c.UseAllOfToExtendReferenceSchemas();
+
 
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
@@ -43,19 +52,28 @@ builder.Services.AddSwaggerGen(c =>
         }
     });
 });
-
+Env.Load();
 builder.Services.AddCarter();
 
 builder.Services.AddMediatR(cfg => {
         cfg.RegisterServicesFromAssembly(typeof(Program).Assembly);
     });
 
+var connectionString = $"Host={Env.GetString("DB_HOST")};" +
+                       $"Database={Env.GetString("DB_NAME")};" +
+                       $"Username={Env.GetString("DB_USER")};" +
+                       $"Password={Env.GetString("DB_PASSWORD")}";
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseNpgsql(connectionString));
 
 builder.Services.AddFluentValidationAutoValidation();
 
 builder.Services.AddHttpContextAccessor();
+
+
+
+
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -66,10 +84,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateAudience = true,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
-            ValidIssuer = "https://localhost:7236",
-            ValidAudience = "https://localhost:7236",
+            ValidIssuer = "https://localhost:7035",
+            ValidAudience = "https://localhost:7035",
             IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes("HIUGhdkciwlc16jcopojjOJNHDOlbpsmHCELVPOkcmdJOE"))
+                Encoding.UTF8.GetBytes(Env.GetString("JWT_SECRET")))
         };
     });
 
@@ -85,10 +103,11 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseRouting();
 
 app.UseAuthentication();
 
-app.UseRouting();
+
 
 app.UseAuthorization();
 
