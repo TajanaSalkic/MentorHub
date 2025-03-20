@@ -1,9 +1,8 @@
 ﻿using Backend.Database;
 using Backend.Models;
 using MediatR;
-using System.Security.Claims;
 
-namespace Backend.Features.Tasks.ChangeStatus
+namespace Backend.Features.Projects.ChangeStatus
 {
     public class Handler : IRequestHandler<Command, Response>
     {
@@ -19,23 +18,22 @@ namespace Backend.Features.Tasks.ChangeStatus
         public async Task<Response> Handle(Command request, CancellationToken cancellationToken)
         {
 
+            var project = _context.Tasks.FirstOrDefault(x => x.Id == request.Id);
 
-            var task = _context.Tasks.FirstOrDefault(x => x.Id == request.Id);
-
-            if (task == null)
+            if (project == null)
             {
-                throw new KeyNotFoundException($"Task with ID {request.Id} not found.");
+                throw new KeyNotFoundException($"Project with ID {request.Id} not found.");
             }
 
-            task.Status = request.ProjectStatus;
+            project.Status = request.ProjectStatus;
 
             await _context.SaveChangesAsync(cancellationToken);
 
             return new Response
             {
-                Id = task.Id,
-                Title = task.Title,
-                ProjectStatus = task.Status.ToString()
+                Id = project.Id,
+                Title = project.Title,
+                ProjectStatus = project.Status.ToString()
             };
         }
     }
