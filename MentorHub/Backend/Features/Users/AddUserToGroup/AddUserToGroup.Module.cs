@@ -1,23 +1,22 @@
 ﻿using Carter;
 using MediatR;
 
-namespace Backend.Features.Groups
+namespace Backend.Features.Users.AddUserToGroup
 {
-   
-    public class CreateGroupModule : ICarterModule
+    public class AddUserToGroupModule : ICarterModule
     {
         public void AddRoutes(IEndpointRouteBuilder app)
         {
-            app.MapPost("/api/groups", async (
+            app.MapPost("/api/adduser", async (
                 Command command,
                 IMediator mediator,
                 CancellationToken cancellationToken) =>
             {
                 var result = await mediator.Send(command, cancellationToken);
 
-                return Results.Created($"/api/groups/{result.GroupId}", result);
+                return Results.Created($"/api/adduser/{result.UserId}", result);
             })
-            .WithName("CreateGroup")
+            .WithName("AddUserToGroup")
             .WithOpenApi()
             .RequireAuthorization()
             .Produces<Response>(StatusCodes.Status201Created)

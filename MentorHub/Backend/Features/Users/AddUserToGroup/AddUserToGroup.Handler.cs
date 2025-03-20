@@ -2,7 +2,7 @@
 using Backend.Models;
 using MediatR;
 
-namespace Backend.Features.Groups
+namespace Backend.Features.Users.AddUserToGroup
 {
     public class Handler : IRequestHandler<Command, Response>
     {
@@ -10,26 +10,29 @@ namespace Backend.Features.Groups
 
         public Handler(ApplicationDbContext context)
         {
-
             _context = context;
         }
 
         public async Task<Response> Handle(Command request, CancellationToken cancellationToken)
         {
-
-            var group = new Group
+            var group_user = new Group_User
             {
-                Title = request.Title
+                Group_ID = request.GroupId,
+                User_ID = request.UserId,
+                Mentor = request.Mentor
             };
 
-            _context.Group.Add(group);
+            _context.Group_Users.Add(group_user);
             await _context.SaveChangesAsync(cancellationToken);
 
             return new Response
             {
-                GroupId = group.Id,
-                Title = group.Title
+                Id = group_user.Id,
+                GroupId = group_user.Group_ID,
+                UserId = group_user.User_ID,
+                Mentor = group_user.Mentor
             };
         }
+
     }
 }
