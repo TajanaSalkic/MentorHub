@@ -2,7 +2,7 @@
 using Backend.Models;
 using MediatR;
 
-namespace Backend.Features.Groups
+namespace Backend.Features.Groups.CreateGroup
 {
     public class Handler : IRequestHandler<Command, Response>
     {

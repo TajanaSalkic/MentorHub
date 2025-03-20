@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace Backend.Features.Groups
+namespace Backend.Features.Groups.CreateGroup
 {
     public record Command : IRequest<Response>
     {

@@ -1,9 +1,9 @@
 ﻿using Carter;
 using MediatR;
 
-namespace Backend.Features.Groups
+namespace Backend.Features.Groups.CreateGroup
 {
-   
+
     public class CreateGroupModule : ICarterModule
     {
         public void AddRoutes(IEndpointRouteBuilder app)
