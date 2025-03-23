@@ -50,22 +50,12 @@ namespace Backend.Features.Projects.GetAllProjects
 
             return new Response
             {
-                Groups = projects
+                Projects = projects
             };
         }
         else if (userRole.Equals("Student"))
         {
-                /* var projects = await _context.Task_Projects
-                                      .Where(x => x.User_ID == userId && x.Creator == false)
-                                      .Include(x => x.Task)
-                                      .Select(tpu => new ProjectDTO
-                                      {
-                                          ProjectId = tpu.Project.Id,
-                                          ProjectName = tpu.Project.Title,
-                                          UserId = tpu.User_ID
-                                      })
-                                      .Distinct()
-                                      .ToListAsync(cancellationToken);*/
+                
 
                 var projects = await _context.Task_Projects
                                 .Where(x => x.User_ID == userId && x.Creator == true)
@@ -78,7 +68,7 @@ namespace Backend.Features.Projects.GetAllProjects
 
                 return new Response
             {
-                Groups = projects
+                    Projects = projects
             };
         }
         else
@@ -93,7 +83,7 @@ namespace Backend.Features.Projects.GetAllProjects
 
                 return new Response
             {
-                Groups = projects
+                Projects = projects
             };
         }
 

@@ -1,12 +1,12 @@
 ﻿using Backend.Models;
 using MediatR;
 
-namespace Backend.Features.Projects.GetAllProjects
+namespace Backend.Features.Tasks.GetAllTasks
 {
     public record Command : IRequest<Response>;
 
     public record Response
     {
-        public List<Project> Projects { get; init; }
+        public List<Models.Task> Tasks { get; init; }
     }
 }
