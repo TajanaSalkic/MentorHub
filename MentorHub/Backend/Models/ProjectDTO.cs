@@ -7,5 +7,7 @@
         public string ProjectName { get; set; }
 
         public long UserId { get; set; }
+
+        public List<Models.Task> Tasks { get; set; }
     }
 }
