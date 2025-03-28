@@ -1,0 +1,48 @@
+<div class="sidebar">
+    <div class="logo-container">
+      <div class="logo-grid">
+        <div class="logo-dot"></div>
+        <div class="logo-dot"></div>
+        <div class="logo-dot"></div>
+        <div class="logo-dot"></div>
+        <div class="logo-dot"></div>
+        <div class="logo-dot"></div>
+        <div class="logo-dot"></div>
+        <div class="logo-dot"></div>
+        <div class="logo-dot"></div>
+      </div>
+      <span class="logo-text">MentorHub</span>
+    </div>
+    
+    <nav class="nav-menu">
+      <a class="nav-item active" routerLink="/home">
+        <i class="nav-icon dashboard-icon"></i>
+        <span>Dashboard</span>
+      </a>
+      <a class="nav-item" routerLink="/board">
+        <i class="nav-icon board-icon"></i>
+        <span>Board</span>
+      </a>
+      <a class="nav-item" routerLink="/task-history">
+        <i class="nav-icon history-icon"></i>
+        <span>Task History</span>
+      </a>
+      <a class="nav-item" routerLink="/pdf">
+        <i class="nav-icon pdf-icon"></i>
+        <span>PDF</span>
+      </a>
+      <a class="nav-item" routerLink="/users">
+        <i class="nav-icon users-icon"></i>
+        <span>Users</span>
+      </a>
+      <a class="nav-item" routerLink="/settings">
+        <i class="nav-icon settings-icon"></i>
+        <span>Settings</span>
+      </a>
+      
+      <a class="nav-item logout" (click)="logout()" >
+        <i class="nav-icon logout-icon"></i>
+        <span>Logout</span>
+      </a>
+    </nav>
+  </div>
