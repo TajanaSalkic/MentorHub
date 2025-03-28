@@ -18,7 +18,7 @@ namespace Backend.Features.Users.Login
             _context = context;
         }
 
-        private string GenerateJwtToken(long userId)
+        private string GenerateJwtToken(long userId, string role)
         {
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("JWT_SECRET")));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -26,6 +26,7 @@ namespace Backend.Features.Users.Login
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
+                new Claim(ClaimTypes.Role, role),
             };
 
             var token = new JwtSecurityToken(
@@ -53,7 +54,7 @@ namespace Backend.Features.Users.Login
             if (user == null)
                 throw new UnauthorizedAccessException("Invalid email or password");
 
-            var token = GenerateJwtToken(user.Id);
+            var token = GenerateJwtToken(user.Id, user.Role.Name);
 
             return new Response
             {

@@ -18,21 +18,21 @@ namespace Backend.Features.Projects.GradeProject
         public async Task<Response> Handle(Command request, CancellationToken cancellationToken)
         {
 
-            var task = await _context.Tasks.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
+            var project = await _context.Projects.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
 
-            task.Points = request.Points;
+            project.Points = request.Points;
 
             await _context.SaveChangesAsync(cancellationToken);
 
             return new Response
             {
-                Id = task.Id,
-                Title = task.Title,
-                Description = task.Description,
-                EndDate = task.EndDate,
-                StartDate = task.StartDate,
-                Points = task.Points,
+                Id = project.Id,
+                Title = project.Title,
+                Description = project.Description,
+                EndDate = project.EndDate,
+                StartDate = project.StartDate,
+                Points = project.Points,
 
 
             };
