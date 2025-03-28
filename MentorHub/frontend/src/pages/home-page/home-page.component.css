@@ -1,0 +1,204 @@
+.app-container {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f9f9f9;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+
+.main-content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.top-header {
+  height: 60px;
+  border-bottom: 2px solid #f0f0ff;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0 20px;
+}
+
+
+.content-area {
+  padding: 20px;
+  flex-grow: 1;
+}
+
+.projects-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+h1 {
+  font-size: 24px;
+  color: #6c5ce7;
+  font-weight: 500;
+}
+
+.create-project-btn {
+  background-color: #6c5ce7;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.search-filter-row {
+  display: flex;
+  margin-bottom: 20px;
+}
+
+.search-container {
+  display: flex;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  overflow: hidden;
+  width: 300px;
+}
+
+.search-input {
+  flex-grow: 1;
+  border: none;
+  padding: 8px 12px;
+  outline: none;
+}
+
+.search-btn {
+  background-color: white;
+  border: none;
+  padding: 0 12px;
+  cursor: pointer;
+}
+
+.search-icon {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  background-color: #999;
+  border-radius: 50%;
+}
+
+.filter-dropdown {
+  margin-left: 10px;
+}
+
+.filter-btn {
+  display: flex;
+  align-items: center;
+  background-color: white;
+  border: 1px solid #ddd;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.dropdown-icon {
+  margin-left: 8px;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid #555;
+}
+
+.projects-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.projects-table th, 
+.projects-table td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+.projects-table th {
+  font-weight: 500;
+  color: #555;
+}
+
+.favorite-col {
+  width: 40px;
+}
+
+.star-icon {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #ddd;
+  border-radius: 50%;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 14px;
+}
+
+.status-active {
+  background-color: #e6f7e6;
+  color: #28a745;
+}
+
+.status-planning {
+  background-color: #e6f0ff;
+  color: #0066cc;
+}
+
+.status-onhold {
+  background-color: #f2f2f2;
+  color: #6c757d;
+}
+
+.status-completed {
+  background-color: #e6ffe6;
+  color: #198754;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.pagination-btn {
+  width: 32px;
+  height: 32px;
+  border: 1px solid #ddd;
+  background-color: white;
+  margin: 0 5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+}
+
+.pagination-btn.active {
+  background-color: #6c5ce7;
+  color: white;
+  border-color: #6c5ce7;
+}
+
+.prev-icon, .next-icon {
+  border: solid #555;
+  border-width: 0 2px 2px 0;
+  display: inline-block;
+  padding: 3px;
+}
+
+.prev-icon {
+  transform: rotate(135deg);
+}
+
+.next-icon {
+  transform: rotate(-45deg);
+}

@@ -1,0 +1,73 @@
+<div class="app-container">
+  <app-sidebar></app-sidebar>
+  
+  <div class="main-content">
+    <app-navbar></app-navbar>
+    
+    <div class="content-area">
+      <div class="projects-header">
+        <h1>Projects</h1>
+        <button class="create-project-btn">Create project</button>
+      </div>
+      
+      <div class="search-filter-row">
+        <div class="search-container">
+          <input type="text" placeholder="Search projects..." class="search-input">
+          <button class="search-btn">
+            <i class="search-icon"></i>
+          </button>
+        </div>
+        
+        <div class="filter-dropdown">
+          <button class="filter-btn">
+            Filter by status
+            <i class="dropdown-icon"></i>
+          </button>
+        </div>
+      </div>
+      
+      <table class="projects-table">
+        <thead>
+          <tr>
+            <th class="favorite-col"></th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Start date</th>
+            <th>End date</th>
+            <th>Lead</th>
+            <th>Project URL</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let project of projects">
+            <td class="favorite-col">
+              <i class="star-icon"></i>
+            </td>
+            <td>{{ project.title }}</td>
+            <td>{{ project.description }}</td>
+            <td>{{ project.startDate | date:'dd/MM/yyyy' }}</td>
+            <td>{{ project.endDate | date:'dd/MM/yyyy' }}</td>
+            <td>{{ userName }}</td>
+            <td>Project URL</td>
+            <td>
+              <span class="status-badge" [ngClass]="getStatusClass(project.status)">
+                {{ getStatusString(project.status) }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <div class="pagination">
+        <button class="pagination-btn prev">
+          <i class="prev-icon"></i>
+        </button>
+        <button class="pagination-btn active">1</button>
+        <button class="pagination-btn next">
+          <i class="next-icon"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
