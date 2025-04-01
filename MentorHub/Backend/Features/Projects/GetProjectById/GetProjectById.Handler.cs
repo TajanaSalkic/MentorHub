@@ -27,20 +27,32 @@ namespace Backend.Features.Projects.GetProjectById
                              .ThenInclude(x => x.Task)
                              .Select(x => new ProjectDTO
                              {
-                                 ProjectId=x.Id,
-                                 ProjectName = x.Title,
-                                 Tasks = x.TaskProjectUsers.Where(x=> x.Creator==false && x.Task_ID!=null).Select(tcl => new Models.Task
-                                 {
-                                     Id = tcl.Project.Id,
-                                     Title = tcl.Project.Title,
-                                     Description = tcl.Project.Description,
-                                     StartDate = tcl.Project.StartDate,
-                                     EndDate = tcl.Project.EndDate,
-                                     Points = tcl.Project.Points,
-                                     
-                                 })
-                                 
-                                 .ToList()
+                                 /*  ProjectId=x.Id,
+                                   ProjectName = x.Title,
+                                   Tasks = x.TaskProjectUsers.Where(x=> x.Creator==false && x.Task_ID!=null).Select(tcl => new Models.Task
+                                   {
+                                       Id = tcl.Project.Id,
+                                       Title = tcl.Project.Title,
+                                       Description = tcl.Project.Description,
+                                       StartDate = tcl.Project.StartDate,
+                                       EndDate = tcl.Project.EndDate,
+                                       Points = tcl.Project.Points,
+
+                                   })
+
+                                   .ToList()*/
+                                 Id = x.Id,
+                                 Title = x.Title,
+                                 Description=x.Description,
+                                 StartDate = x.StartDate,
+                                 EndDate = x.EndDate,
+                                 Status=x.Status,
+                                 Points = x.Points,
+                                 TasksOnHold = x.TaskProjectUsers.Count(tpu => tpu.Task != null && tpu.Task.Status== ProjectStatus.OnHold),
+                                 TasksPlanning = x.TaskProjectUsers.Count(tpu => tpu.Task != null && tpu.Task.Status == ProjectStatus.Planning),
+                                 TasksActive = x.TaskProjectUsers.Count(tpu => tpu.Task != null && tpu.Task.Status == ProjectStatus.Active),
+                                 TasksDone = x.TaskProjectUsers.Count(tpu => tpu.Task != null && tpu.Task.Status == ProjectStatus.Completed)
+
                              })
                              .FirstOrDefaultAsync(cancellationToken);
 
