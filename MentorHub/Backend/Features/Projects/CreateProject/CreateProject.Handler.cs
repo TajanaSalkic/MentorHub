@@ -18,7 +18,7 @@ namespace Backend.Features.Projects.CreateProject
 
         public async Task<Response> Handle(Command request, CancellationToken cancellationToken)
         {
-            var userIdClaim = _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier);
+            var userIdClaim = _httpContextAccessor.HttpContext?.User?.FindFirst("userId");
             if (userIdClaim == null)
                 throw new UnauthorizedAccessException("User ID not found in token");
 
@@ -48,11 +48,23 @@ namespace Backend.Features.Projects.CreateProject
             _context.Task_Projects.Add(taskProjectUser);
             await _context.SaveChangesAsync(cancellationToken);
 
+            var studentTaskProject = new Task_Project_User
+            {
+                User_ID = request.StudentID,
+                Project_ID = project.Id,
+                Task_ID = null,
+                Creator = false
+            };
+
+            _context.Task_Projects.Add(studentTaskProject);
+            await _context.SaveChangesAsync(cancellationToken);
+
             return new Response
             {
                 ProjectId = project.Id,
                 Title = project.Title,
-                Status = project.Status
+                Status = project.Status,
+                StudentID = studentTaskProject.User_ID
             };
         }
     }

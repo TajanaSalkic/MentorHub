@@ -48,10 +48,10 @@ namespace Backend.Features.Projects.GetProjectById
                                  EndDate = x.EndDate,
                                  Status=x.Status,
                                  Points = x.Points,
-                                 TasksOnHold = x.TaskProjectUsers.Count(tpu => tpu.Task != null && tpu.Task.Status== ProjectStatus.OnHold),
-                                 TasksPlanning = x.TaskProjectUsers.Count(tpu => tpu.Task != null && tpu.Task.Status == ProjectStatus.Planning),
-                                 TasksActive = x.TaskProjectUsers.Count(tpu => tpu.Task != null && tpu.Task.Status == ProjectStatus.Active),
-                                 TasksDone = x.TaskProjectUsers.Count(tpu => tpu.Task != null && tpu.Task.Status == ProjectStatus.Completed)
+                                 TasksOnHold = x.TaskProjectUsers.Count(tpu => tpu.Task != null && tpu.Task.Status== ProjectStatus.OnHold && tpu.Creator==true),
+                                 TasksPlanning = x.TaskProjectUsers.Count(tpu => tpu.Task != null && tpu.Task.Status == ProjectStatus.Planning && tpu.Creator == true),
+                                 TasksActive = x.TaskProjectUsers.Count(tpu => tpu.Task != null && tpu.Task.Status == ProjectStatus.Active && tpu.Creator == true),
+                                 TasksDone = x.TaskProjectUsers.Count(tpu => tpu.Task != null && tpu.Task.Status == ProjectStatus.Completed && tpu.Creator == true)
 
                              })
                              .FirstOrDefaultAsync(cancellationToken);

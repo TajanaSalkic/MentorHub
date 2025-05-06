@@ -18,7 +18,7 @@ namespace Backend.Features.Tasks.CreateTask
 
         public async Task<Response> Handle(Command request, CancellationToken cancellationToken)
         {
-            var userIdClaim = _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier);
+            var userIdClaim = _httpContextAccessor.HttpContext?.User?.FindFirst("userId");
             if (userIdClaim == null)
                 throw new UnauthorizedAccessException("User ID not found in token");
 

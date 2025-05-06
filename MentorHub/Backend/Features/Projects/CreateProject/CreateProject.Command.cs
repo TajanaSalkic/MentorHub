@@ -10,6 +10,8 @@ namespace Backend.Features.Projects.CreateProject
         public DateTime StartDate { get; init; }
         public DateTime EndDate { get; init; }
         public double Points { get; set; }
+
+        public long StudentID { get; set; }
     }
 
     public record Response
@@ -17,5 +19,7 @@ namespace Backend.Features.Projects.CreateProject
         public long ProjectId { get; init; }
         public string Title { get; init; }
         public ProjectStatus Status { get; init; }
+
+        public long StudentID { get; init; }
     }
 }

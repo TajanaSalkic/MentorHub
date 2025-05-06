@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Features\Users\GetAllMentors\" />
     <Folder Include="Features\Users\UpdateUser\" />
   </ItemGroup>
 

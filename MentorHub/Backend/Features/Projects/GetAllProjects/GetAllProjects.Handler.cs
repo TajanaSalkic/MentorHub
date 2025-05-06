@@ -22,21 +22,25 @@ namespace Backend.Features.Projects.GetAllProjects
 
     public async Task<Response> Handle(Command request, CancellationToken cancellationToken)
     {
-        var userIdClaim = _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier);
-        if (userIdClaim == null)
-            throw new UnauthorizedAccessException("User ID not found in token");
 
-        var userId = long.Parse(userIdClaim.Value);
+            var userIdClaim = _httpContextAccessor.HttpContext?.User?.FindFirst("userId");
+            if (userIdClaim == null)
+                throw new UnauthorizedAccessException("User ID not found in token");
 
-        var userRoleClaim = _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.Role);
-        if (userRoleClaim == null)
-            throw new UnauthorizedAccessException("User role not found in token");
+            var userId = long.Parse(userIdClaim.Value);
 
-        var userRole = userRoleClaim.Value.Trim();
+            var userRoleClaim = _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.Role);
+            if (userRoleClaim == null)
+                throw new UnauthorizedAccessException("User role not found in token");
+
+            var userRole = userRoleClaim.Value.Trim();
 
 
 
-        if (userRole.Equals("Mentor"))
+            // treba dodati da vrati kome je assigned ovaj projekat
+
+
+            if (userRole.Equals("Mentor"))
         {
 
 
@@ -58,7 +62,7 @@ namespace Backend.Features.Projects.GetAllProjects
                 
 
                 var projects = await _context.Task_Projects
-                                .Where(x => x.User_ID == userId && x.Creator == true)
+                                .Where(x => x.User_ID == userId && x.Creator == false)
                                 .Include(x => x.Task)
                                 .Include(x => x.Project)
                                 .Select(tpu => tpu.Project)

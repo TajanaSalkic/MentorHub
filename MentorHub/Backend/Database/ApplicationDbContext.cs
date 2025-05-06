@@ -27,6 +27,8 @@ namespace Backend.Database
 
         public DbSet<Task_CommitLink> Task_CommitLinks { get; set; }
 
+        public DbSet<Mentor_Student> Mentor_Students { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -78,6 +80,18 @@ namespace Backend.Database
                 .HasOne(tpu => tpu.Project)
                 .WithMany(p => p.TaskProjectUsers)
                 .HasForeignKey(tpu => tpu.Project_ID)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Mentor_Student>()
+                .HasOne(ms => ms.Mentor)
+                .WithMany()
+                .HasForeignKey(ms => ms.Mentor_ID)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Mentor_Student>()
+                .HasOne(ms => ms.Student)
+                .WithMany()
+                .HasForeignKey(ms => ms.Student_ID)
                 .OnDelete(DeleteBehavior.Restrict);
         }
     }
