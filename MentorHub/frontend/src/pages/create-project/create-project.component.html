@@ -1,0 +1,71 @@
+<div class="app-container">
+    <app-sidebar></app-sidebar>
+    
+    <div class="main-content">
+      <app-navbar></app-navbar>
+      
+      <div class="content-area">
+        <div class="create-project-container">
+          <div class="create-project-header">
+            <h1>Create project</h1>
+            <button class="create-btn" (click)="onSubmit()">Create</button>
+          </div>
+          
+          <form [formGroup]="projectForm" (ngSubmit)="onSubmit()">
+            <div class="form-grid">
+              <div class="left-column">
+                <div class="form-group title-group">
+                  <div class="favorite-icon">★</div>
+                  <input type="text" formControlName="title" placeholder="Input a name..." class="title-input">
+                </div>
+                
+                <div class="form-group">
+                  <label>Description</label>
+                  <div class="text-editor-container">
+                    <textarea formControlName="description" class="description-input"></textarea>
+                    
+                  </div>
+                </div>
+              </div>
+              
+              <div class="right-column">
+                <div class="form-group">
+                  <label>Planning</label>
+                </div>
+                
+                <div class="form-group">
+                  <label>Start date</label>
+                  <input type="date" formControlName="startDate" class="date-input">
+                </div>
+                
+                <div class="form-group">
+                  <label>End date</label>
+                  <input type="date" formControlName="endDate" class="date-input">
+                </div>
+                
+                <div class="form-group">
+                  <label>Link</label>
+                  <input type="text" class="link-input">
+                </div>
+                
+                <div class="form-group">
+                  <label>Student</label>
+                  <div class="student-dropdown">
+                    <div class="selected-student" (click)="toggleStudentDropdown()">
+                      {{ selectedStudent ? selectedStudent.name + ' ' + selectedStudent.surname : 'Name Surname' }}
+                      <span class="dropdown-arrow">▼</span>
+                    </div>
+                    <div class="dropdown-menu" *ngIf="showStudentDropdown">
+                      <div class="dropdown-item" *ngFor="let student of students" (click)="selectStudent(student)">
+                        {{ student.name }} {{ student.surname }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>

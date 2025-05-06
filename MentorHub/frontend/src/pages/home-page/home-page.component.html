@@ -1,5 +1,4 @@
 <div class="app-container">
-  <app-sidebar></app-sidebar>
   
   <div class="main-content">
     <app-navbar></app-navbar>
@@ -7,24 +6,21 @@
     <div class="content-area">
       <div class="projects-header">
         <h1>Projects</h1>
-        <button class="create-project-btn">Create project</button>
+        <button class="create-project-btn" (click)="createProject()">Create project</button>
       </div>
       
       <div class="search-filter-row">
         <div class="search-container">
-          <input type="text" placeholder="Search projects..." class="search-input">
+          <input type="text" [(ngModel)]="searchTerm" (input)="filterProjects()" placeholder="Search projects..." class="search-input">
           <button class="search-btn">
-            <i class="search-icon"></i>
+            <i class="fa fa-search"></i>
           </button>
         </div>
         
-        <div class="filter-dropdown">
-          <button class="filter-btn">
-            Filter by status
-            <i class="dropdown-icon"></i>
-          </button>
-        </div>
-      </div>
+        
+
+      
+    </div>
       
       <table class="projects-table">
         <thead>
@@ -40,9 +36,9 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let project of projects">
+          <tr *ngFor="let project of filteredProjects" (click)="navigateToProject(project.id)" class="project-row">
             <td class="favorite-col">
-              <i class="star-icon"></i>
+              <i class="star-icon">★</i>
             </td>
             <td>{{ project.title }}</td>
             <td>{{ project.description }}</td>

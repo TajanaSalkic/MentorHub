@@ -1,0 +1,69 @@
+<div class="app-container">
+    <app-sidebar></app-sidebar>
+    
+    <div class="main-content">
+      <app-navbar></app-navbar>
+      
+      <div class="content-area">
+        <div class="project-header">
+          <div class="project-title-section">
+            <div class="favorite-icon">★</div>
+            <h1>{{ project.title }}</h1>
+          </div>
+          <div class="project-link">
+            Link: <a href="https://github/Tajana-Project{{ projectId }}" target="_blank">https://github/Tajana-Project{{ projectId }}</a>
+          </div>
+        </div>
+        
+        <div class="project-details">
+          <div class="detail-section">
+            <h3>Description</h3>
+            <div class="description-content">
+              <p>{{ project.description }}</p>
+              <button class="edit-btn">✎</button>
+            </div>
+          </div>
+          
+          <div class="project-data">
+            <div class="data-item">
+              <span class="label">Start date</span>
+              <span class="value">{{ project.startDate | date:'dd MMM, yyyy' }}</span>
+            </div>
+            <div class="data-item">
+              <span class="label">End date</span>
+              <span class="value">{{ project.endDate | date:'dd MMM, yyyy' }}</span>
+            </div>
+            <div class="data-item">
+              <span class="label">Status</span>
+              <span class="value status-badge" [ngClass]="getStatusClass(project.status)">
+                {{ getStatusString(project.status) }}
+              </span>
+            </div>
+            <div class="data-item">
+              <span class="label">Points</span>
+              <span class="value">{{ project.points }}</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="tasks-section">
+          <div class="task-column">
+            <h3>Tasks <span class="task-status on-hold">On hold</span></h3>
+            <div class="task-count">{{ project.tasksOnHold }}</div>
+          </div>
+          <div class="task-column">
+            <h3>Tasks <span class="task-status planning">Planning</span></h3>
+            <div class="task-count">{{ project.tasksPlanning }}</div>
+          </div>
+          <div class="task-column">
+            <h3>Tasks <span class="task-status active">Active</span></h3>
+            <div class="task-count">{{ project.tasksActive }}</div>
+          </div>
+          <div class="task-column">
+            <h3>Tasks <span class="task-status done">Done</span></h3>
+            <div class="task-count">{{ project.tasksDone }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
