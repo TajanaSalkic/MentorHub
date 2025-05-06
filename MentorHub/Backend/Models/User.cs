@@ -21,5 +21,8 @@ namespace Backend.Models
         public virtual ICollection<Task_Project_User> TaskProjectUsers { get; set; } = new List<Task_Project_User>();
         public virtual ICollection<Group_User> GroupUsers { get; set; } = new List<Group_User>();
 
+        public virtual ICollection<Mentor_Student> MentorStudents { get; set; }
+
+
     }
 }
