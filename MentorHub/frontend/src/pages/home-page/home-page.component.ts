@@ -1,9 +1,11 @@
-import { Component, OnInit, Pipe, PipeTransform } from '@angular/core';
+import { Component, Input, OnInit, Pipe, PipeTransform, SimpleChanges } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { SidebarComponent } from '../../components/sidebar/sidebar.component';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
+import { Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 
 export enum ProjectStatus {
   Planning = 0,
@@ -12,38 +14,30 @@ export enum ProjectStatus {
   Completed = 3
 }
 
-@Pipe({
-  name: 'filterByStatus',
-  standalone: true
-})
-export class FilterByStatusPipe implements PipeTransform {
-  transform(projects: any[], status: number): any[] {
-    return projects.filter(project => project.status === status);
-  }
-}
-
-@Pipe({
-  name: 'count',
-  standalone: true
-})
-export class CountPipe implements PipeTransform {
-  transform(projects: any[]): number {
-    return projects.length;
-  }
-}
 
 @Component({
   selector: 'app-home-page',
   standalone: true,
-  imports: [CommonModule, SidebarComponent, NavbarComponent],
+  imports: [CommonModule, NavbarComponent, FormsModule],
   templateUrl: './home-page.component.html',
   styleUrl: './home-page.component.css'
 })
 export class HomePageComponent implements OnInit {
   projects: any[] = [];
-  userName: string = 'Tajana Salkić';
+  filteredProjects: any[] = [];
+  selectedStatus: number | null = null;
+  statusList = [
+    { label: 'Planning', value: 0 },
+    { label: 'Active', value: 1},
+    { label: 'On Hold', value: 2 },
+    { label: 'Completed', value: 3},
+  ];
+
   
-  constructor(private http: HttpClient, private authService: AuthService) {}
+  @Input() searchTerm: string = '';  
+  userName: string = 'Tajana Salkić';
+
+  constructor(private http: HttpClient, private router: Router) {}
 
   ngOnInit(): void {
     this.fetchProjects();
@@ -56,6 +50,7 @@ export class HomePageComponent implements OnInit {
     this.http.get('https://localhost:7035/api/projects', { headers }).subscribe({
       next: (response: any) => {
         this.projects = response.projects;
+        this.filteredProjects = response.projects; 
       },
       error: (error) => {
         console.error('Failed to fetch projects', error);
@@ -63,12 +58,39 @@ export class HomePageComponent implements OnInit {
     });
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['searchTerm']) {
+      this.filterProjects();
+    }
+  }
+
+  filterProjects() {
+    const searchLower = this.searchTerm.toLowerCase();
+
+    this.filteredProjects = this.projects.filter(project =>
+      Object.values(project).some(value =>
+        value && value.toString().toLowerCase().includes(searchLower)
+      )
+    );
+    console.log(this.filteredProjects);
+
+  }
+
+  
+
   getStatusString(status: number): string {
     return ProjectStatus[status];
   }
-  
+
   getStatusClass(status: number): string {
-    const statusString = ProjectStatus[status].toLowerCase();
-    return `status-${statusString}`;
+    return `status-${ProjectStatus[status].toLowerCase()}`;
+  }
+
+  navigateToProject(projectId: number) {
+    this.router.navigate(['/project', projectId]);
+  }
+
+  createProject(){
+    this.router.navigate(['/create-project'])
   }
 }
