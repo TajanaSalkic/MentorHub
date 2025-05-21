@@ -3,7 +3,7 @@ using MediatR;
 
 namespace Backend.Features.Projects.DeleteProject
 {
-    public class DeleteProjectModule : ICarterModule
+    public class DeleteProjectEndpoint : ICarterModule
     {
         public void AddRoutes(IEndpointRouteBuilder app)
         {

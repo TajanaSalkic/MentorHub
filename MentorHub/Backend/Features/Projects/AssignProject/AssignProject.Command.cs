@@ -13,5 +13,8 @@ namespace Backend.Features.Projects.AssignProject
     {
         public long ProjectId { get; init; }
         public long UserID { get; init; }
+
+        public string Message { get; set; }
+
     }
 }

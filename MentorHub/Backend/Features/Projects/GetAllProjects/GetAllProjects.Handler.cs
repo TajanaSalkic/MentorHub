@@ -36,21 +36,30 @@ namespace Backend.Features.Projects.GetAllProjects
             var userRole = userRoleClaim.Value.Trim();
 
 
-
-            // treba dodati da vrati kome je assigned ovaj projekat
-
-
             if (userRole.Equals("Mentor"))
         {
 
 
-            var projects = await _context.Task_Projects
-                                 .Where(x => x.User_ID == userId && x.Creator == true)
-                                 .Include(x => x.Task)
-                                 .Include(x=> x.Project)
-                                 .Select(tpu => tpu.Project)
+                var projects =  _context.Task_Projects
+                                     .Where(x => x.User_ID == userId && x.Creator == true && x.Task_ID == null)
+                                     .Include(x => x.Task)
+                                     .Include(x => x.Project)
+                                     .Select(x => new ProjectWithUserDTO
+                                     {
+                                         Id = x.Project.Id,
+                                         Title = x.Project.Title,
+                                         Description = x.Project.Description,
+                                         StartDate = x.Project.StartDate,
+                                         EndDate = x.Project.EndDate,
+                                         Status = x.Project.Status,
+                                         Points = x.Project.Points,
+                                         Url = x.Project.Url,
+                                         UserName = _context.Task_Projects.Where(t => t.Project_ID == x.Project.Id && t.Creator == false).Select(d => d.User.Name + " " + d.User.Surname).FirstOrDefault()
+
+                                     })
+                                     .AsEnumerable()
                                  .Distinct()
-                                 .ToListAsync(cancellationToken);
+                                 .ToList();
 
             return new Response
             {
@@ -62,10 +71,21 @@ namespace Backend.Features.Projects.GetAllProjects
                 
 
                 var projects = await _context.Task_Projects
-                                .Where(x => x.User_ID == userId && x.Creator == false)
+                                .Where(x => x.User_ID == userId && x.Creator == false && x.Task_ID == null)
                                 .Include(x => x.Task)
                                 .Include(x => x.Project)
-                                .Select(tpu => tpu.Project)
+                                .Select(x => new ProjectWithUserDTO
+                                {
+                                    Id = x.Project.Id,
+                                    Title = x.Project.Title,
+                                    Description = x.Project.Description,
+                                    StartDate = x.Project.StartDate,
+                                    EndDate = x.Project.EndDate,
+                                    Status = x.Project.Status,
+                                    Points = x.Project.Points,
+                                    Url = x.Project.Url,
+                                    UserName = x.User.Name + " " + x.User.Surname
+                                })
                                 .Distinct()
                                 .ToListAsync(cancellationToken);
 
@@ -77,10 +97,21 @@ namespace Backend.Features.Projects.GetAllProjects
         }
         else
         {
-                var projects = await _context.Task_Projects
+                var projects = await _context.Task_Projects.Where(x=>x.Creator==false && x.Task_ID==null)
                                 .Include(x => x.Task)
                                 .Include(x => x.Project)
-                                .Select(tpu => tpu.Project)
+                                .Select(x => new ProjectWithUserDTO
+                                {
+                                    Id = x.Project.Id,
+                                    Title = x.Project.Title,
+                                    Description = x.Project.Description,
+                                    StartDate = x.Project.StartDate,
+                                    EndDate = x.Project.EndDate,
+                                    Status = x.Project.Status,
+                                    Points = x.Project.Points,
+                                    Url = x.Project.Url,
+                                    UserName = x.User.Name + " " + x.User.Surname
+                                })
                                 .Distinct()
                                 .ToListAsync(cancellationToken);
 

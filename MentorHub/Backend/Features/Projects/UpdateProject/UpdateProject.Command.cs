@@ -12,6 +12,9 @@ namespace Backend.Features.Projects.UpdateProject
         public DateTime? EndDate { get; init; }
         public ProjectStatus? Status { get; init; }
         public double? Points { get; init; }
+
+        public string? Url { get; set; }
+        public long? StudentID { get; set; }
     }
 
     public record Response

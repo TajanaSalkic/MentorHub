@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Backend.Migrations
 {
     /// <inheritdoc />
-    public partial class FourthMigration : Migration
+    public partial class LastMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -26,19 +26,6 @@ namespace Backend.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Group",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Title = table.Column<string>(type: "text", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Group", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Projects",
                 columns: table => new
                 {
@@ -49,7 +36,8 @@ namespace Backend.Migrations
                     StartDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     EndDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Status = table.Column<int>(type: "integer", nullable: false),
-                    Points = table.Column<double>(type: "double precision", nullable: false)
+                    Points = table.Column<double>(type: "double precision", nullable: false),
+                    Url = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -97,7 +85,8 @@ namespace Backend.Migrations
                     Surname = table.Column<string>(type: "text", nullable: false),
                     Email = table.Column<string>(type: "text", nullable: false),
                     Password = table.Column<string>(type: "text", nullable: false),
-                    Role_Id = table.Column<long>(type: "bigint", nullable: false)
+                    Role_Id = table.Column<long>(type: "bigint", nullable: false),
+                    Approved = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -137,30 +126,31 @@ namespace Backend.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Group_Users",
+                name: "Comments",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    User_ID = table.Column<long>(type: "bigint", nullable: false),
-                    Group_ID = table.Column<long>(type: "bigint", nullable: false),
-                    Mentor = table.Column<bool>(type: "boolean", nullable: false)
+                    Content = table.Column<string>(type: "text", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    TaskId = table.Column<long>(type: "bigint", nullable: false),
+                    UserId = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Group_Users", x => x.Id);
+                    table.PrimaryKey("PK_Comments", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Group_Users_Group_Group_ID",
-                        column: x => x.Group_ID,
-                        principalTable: "Group",
+                        name: "FK_Comments_Tasks_TaskId",
+                        column: x => x.TaskId,
+                        principalTable: "Tasks",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Group_Users_Users_User_ID",
-                        column: x => x.User_ID,
+                        name: "FK_Comments_Users_UserId",
+                        column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -230,15 +220,45 @@ namespace Backend.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
-            migrationBuilder.CreateIndex(
-                name: "IX_Group_Users_Group_ID",
-                table: "Group_Users",
-                column: "Group_ID");
+            migrationBuilder.CreateTable(
+                name: "TaskChanges",
+                columns: table => new
+                {
+                    ChangeID = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    TaskID = table.Column<long>(type: "bigint", nullable: false),
+                    FieldChanged = table.Column<string>(type: "text", nullable: false),
+                    OldValue = table.Column<string>(type: "text", nullable: false),
+                    NewValue = table.Column<string>(type: "text", nullable: false),
+                    UserID = table.Column<long>(type: "bigint", nullable: false),
+                    ChangedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TaskChanges", x => x.ChangeID);
+                    table.ForeignKey(
+                        name: "FK_TaskChanges_Tasks_TaskID",
+                        column: x => x.TaskID,
+                        principalTable: "Tasks",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_TaskChanges_Users_UserID",
+                        column: x => x.UserID,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Group_Users_User_ID",
-                table: "Group_Users",
-                column: "User_ID");
+                name: "IX_Comments_TaskId",
+                table: "Comments",
+                column: "TaskId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Comments_UserId",
+                table: "Comments",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Mentor_Students_Mentor_ID",
@@ -281,6 +301,16 @@ namespace Backend.Migrations
                 column: "User_ID");
 
             migrationBuilder.CreateIndex(
+                name: "IX_TaskChanges_TaskID",
+                table: "TaskChanges",
+                column: "TaskID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TaskChanges_UserID",
+                table: "TaskChanges",
+                column: "UserID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Users_Role_Id",
                 table: "Users",
                 column: "Role_Id");
@@ -290,7 +320,7 @@ namespace Backend.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Group_Users");
+                name: "Comments");
 
             migrationBuilder.DropTable(
                 name: "Mentor_Students");
@@ -302,7 +332,7 @@ namespace Backend.Migrations
                 name: "Task_Projects");
 
             migrationBuilder.DropTable(
-                name: "Group");
+                name: "TaskChanges");
 
             migrationBuilder.DropTable(
                 name: "CommitLinks");

@@ -2,27 +2,23 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Backend.Features.Projects.UpdateProject
+namespace Backend.Features.Projects.GradeProject
 {
-    public class UpdateProjectModule : ICarterModule
+    public class GradeProjectEndpoint : ICarterModule
     {
         public void AddRoutes(IEndpointRouteBuilder app)
         {
-            app.MapPut("/api/projects/{id:long}", async (
-                long id,
+            app.MapPut("/api/projects/grade", async (
                 [FromBody] Command command,
                 IMediator mediator,
                 CancellationToken cancellationToken) =>
             {
-                if (id != command.Id)
-                {
-                    return Results.BadRequest("ID in URL and body must match.");
-                }
+
 
                 var result = await mediator.Send(command, cancellationToken);
                 return Results.Ok(result);
             })
-            .WithName("UpdateProject")
+            .WithName("GradeProject")
             .WithOpenApi()
             .RequireAuthorization()
             .Produces<Response>(StatusCodes.Status200OK)

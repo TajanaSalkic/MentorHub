@@ -1,21 +1,21 @@
 ﻿using Carter;
 using MediatR;
 
-namespace Backend.Features.Projects.AssignProject
+namespace Backend.Features.Projects.CreateProject
 {
-    public class AssignTaskModule : ICarterModule
+    public class CreateProjectEndpoint : ICarterModule
     {
         public void AddRoutes(IEndpointRouteBuilder app)
         {
-            app.MapPost("/api/assignproject", async (
+            app.MapPost("/api/projects", async (
                 Command command,
                 IMediator mediator,
                 CancellationToken cancellationToken) =>
             {
                 var result = await mediator.Send(command, cancellationToken);
-                return Results.Created($"/api/assignproject/{result.ProjectId}", result);
+                return Results.Created($"/api/projects/{result.ProjectId}", result);
             })
-            .WithName("AssignProject")
+            .WithName("CreateProject")
             .WithOpenApi()
             .RequireAuthorization()
             .Produces<Response>(StatusCodes.Status201Created)

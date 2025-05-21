@@ -1,13 +1,15 @@
-﻿using Carter;
+﻿using Backend.Models;
+using Carter;
 using MediatR;
 
-namespace Backend.Features.Projects.GetProjectsByGroupId
+namespace Backend.Features.Projects.GetProjectById
 {
-    public class GetProjectsByGroupIdModule : ICarterModule
+   
+    public class GetProjectByIdEndpoint : ICarterModule
     {
         public void AddRoutes(IEndpointRouteBuilder app)
         {
-            app.MapGet("/api/projects/groupId/{id:long}", async (
+            app.MapGet("/api/projects/{id:long}", async (
                 long id,
                 IMediator mediator,
                 CancellationToken cancellationToken) =>
@@ -15,7 +17,7 @@ namespace Backend.Features.Projects.GetProjectsByGroupId
                 var result = await mediator.Send(new Command(id), cancellationToken);
                 return Results.Ok(result);
             })
-            .WithName(" GetProjectsByGroupId")
+            .WithName("GetProjectById")
             .WithOpenApi()
             .RequireAuthorization()
             .Produces<Response>(StatusCodes.Status201Created)

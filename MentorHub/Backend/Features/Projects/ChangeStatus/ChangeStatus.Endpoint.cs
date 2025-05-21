@@ -3,7 +3,7 @@ using MediatR;
 
 namespace Backend.Features.Projects.ChangeStatus
 {
-    public class ChangeStatusProjectModule : ICarterModule
+    public class ChangeStatusProjectEndpoint : ICarterModule
     {
         public void AddRoutes(IEndpointRouteBuilder app)
         {
