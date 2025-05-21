@@ -1,23 +1,25 @@
 ﻿using Carter;
 using MediatR;
 
-namespace Backend.Features.Users.Login
+namespace Backend.Features.Comments.CreateComment
 {
-    public class LoginModule : ICarterModule
+    public class CreateCommentEndpoint : ICarterModule
     {
         public void AddRoutes(IEndpointRouteBuilder app)
         {
-            app.MapPost("/api/users/login", async (
+            app.MapPost("/api/comments/add", async (
                 Command command,
                 IMediator mediator,
                 CancellationToken cancellationToken) =>
             {
                 var result = await mediator.Send(command, cancellationToken);
-                return Results.Ok(result);
+
+                return Results.Created($"/api/comments/{result.Comment.Id}", result);
             })
-            .WithName("LoginUser")
+            .WithName("CreateComment")
             .WithOpenApi()
-            .Produces<Response>(StatusCodes.Status200OK)
+            .RequireAuthorization()
+            .Produces<Response>(StatusCodes.Status201Created)
             .ProducesValidationProblem();
         }
     }

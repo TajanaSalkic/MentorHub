@@ -1,7 +1,7 @@
 using Backend.Database;
 using Carter;
 using DotNetEnv;
-using FluentValidation.AspNetCore;
+using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -67,8 +67,7 @@ var connectionString = $"Host={Env.GetString("DB_HOST")};" +
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(connectionString));
 
-builder.Services.AddFluentValidationAutoValidation();
-
+builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly,includeInternalTypes:true);
 builder.Services.AddHttpContextAccessor();
 
 

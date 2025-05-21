@@ -2,18 +2,20 @@
 using Backend.Models;
 using FluentValidation;
 using MediatR;
-using System.Security.Cryptography;
-using System.Text;
+using System.Security.Claims;
 
-namespace Backend.Features.Users.Register
+namespace Backend.Features.Users.ApproveUser
 {
     public class Handler : IRequestHandler<Command, Response>
     {
         private readonly ApplicationDbContext _context;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IValidator<Command> _validator;
-        public Handler(ApplicationDbContext context, IValidator<Command> validator)
+
+        public Handler(ApplicationDbContext context, IHttpContextAccessor httpContextAccessor, IValidator<Command> validator)
         {
             _context = context;
+            _httpContextAccessor = httpContextAccessor;
             _validator = validator;
         }
 
@@ -25,32 +27,25 @@ namespace Backend.Features.Users.Register
             {
                 throw new ValidationException(validationResult.Errors);
             }
-            var hashedPassword = HashPassword(request.Password);
 
-            var user = new User
+            var user = _context.Users.Where(x=> x.Id == request.userId).FirstOrDefault();
+            if (user == null)
             {
-                Name = request.Name,
-                Surname = request.Surname,
-                Email = request.Email,
-                Password = hashedPassword,
-                Role_Id = request.RoleId
-            };
+                return new Response
+                {
+                    Message = "Unsuccessful change!"
+                };
+            }
 
-            _context.Users.Add(user);
+            user.Approved = request.Approved;
+
             await _context.SaveChangesAsync(cancellationToken);
 
             return new Response
             {
-                UserId = user.Id,
-                Email = user.Email
+                Message = "successful change!"
             };
-        }
 
-        private string HashPassword(string password)
-        {
-            using var sha256 = SHA256.Create();
-            var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
-            return Convert.ToBase64String(hashedBytes);
         }
     }
 }

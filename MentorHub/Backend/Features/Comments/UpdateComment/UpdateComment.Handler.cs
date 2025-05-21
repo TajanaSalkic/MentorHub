@@ -2,15 +2,15 @@
 using Backend.Models;
 using FluentValidation;
 using MediatR;
-using System.Security.Cryptography;
-using System.Text;
 
-namespace Backend.Features.Users.Register
+namespace Backend.Features.Comments.UpdateComment
 {
     public class Handler : IRequestHandler<Command, Response>
     {
         private readonly ApplicationDbContext _context;
         private readonly IValidator<Command> _validator;
+
+
         public Handler(ApplicationDbContext context, IValidator<Command> validator)
         {
             _context = context;
@@ -25,32 +25,24 @@ namespace Backend.Features.Users.Register
             {
                 throw new ValidationException(validationResult.Errors);
             }
-            var hashedPassword = HashPassword(request.Password);
 
-            var user = new User
+            var comment = _context.Comments.Where(x=> x.Id == request.Id).FirstOrDefault();
+
+            if (comment == null)
             {
-                Name = request.Name,
-                Surname = request.Surname,
-                Email = request.Email,
-                Password = hashedPassword,
-                Role_Id = request.RoleId
-            };
+                throw new KeyNotFoundException($"Comment with ID {request.Id} not found.");
+            }
 
-            _context.Users.Add(user);
+            comment.Content = request.Content;
+
+
             await _context.SaveChangesAsync(cancellationToken);
 
             return new Response
             {
-                UserId = user.Id,
-                Email = user.Email
+                Comment = comment,
+                Message = "Comment successfully updated!"
             };
-        }
-
-        private string HashPassword(string password)
-        {
-            using var sha256 = SHA256.Create();
-            var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
-            return Convert.ToBase64String(hashedBytes);
         }
     }
 }

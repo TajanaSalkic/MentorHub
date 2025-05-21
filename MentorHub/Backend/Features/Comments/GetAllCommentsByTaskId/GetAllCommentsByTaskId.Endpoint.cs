@@ -1,20 +1,21 @@
 ﻿using Carter;
 using MediatR;
 
-namespace Backend.Features.Users.GetAllUsers
+namespace Backend.Features.Comments.GetAllCommentsByTaskId
 {
-    public class GetAllUsersModule : ICarterModule
+    public class GetAllCommentsByTaskIdEndpoint : ICarterModule
     {
         public void AddRoutes(IEndpointRouteBuilder app)
         {
-            app.MapGet("/api/users", async (
+            app.MapGet("/api/tasks/{id:long}/comments", async (
+                long id,
                 IMediator mediator,
                 CancellationToken cancellationToken) =>
             {
-                var result = await mediator.Send(new Command(), cancellationToken);
-                return Results.Ok(result);
+                var result = await mediator.Send(new Command(id), cancellationToken);
+                return Results.Created($"/api/comments/", result);
             })
-            .WithName("GetAllUsers")
+            .WithName("GetAllCommentsByTaskId")
             .WithOpenApi()
             .RequireAuthorization()
             .Produces<Response>(StatusCodes.Status201Created)

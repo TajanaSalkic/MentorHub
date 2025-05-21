@@ -1,7 +1,7 @@
 ﻿using Backend.Models;
 using MediatR;
 
-namespace Backend.Features.Users.GetAllUsers
+namespace Backend.Features.Users.GetAllMentors
 {
     public record Command : IRequest<Response>;
 

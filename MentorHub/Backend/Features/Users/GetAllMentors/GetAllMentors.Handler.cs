@@ -4,7 +4,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
-namespace Backend.Features.Users.GetAllStudents
+namespace Backend.Features.Users.GetAllMentors
 {
     public class Handler : IRequestHandler<Command, Response>
     {
@@ -31,40 +31,17 @@ namespace Backend.Features.Users.GetAllStudents
 
             var userRole = userRoleClaim.Value.Trim();
 
-            if(userRole.Equals("Admin"))
+            if (userRole.Equals("Admin"))
             {
                 var students = await _context.Users
-                    .Where(x => x.Role.Name.Equals("Student")).Select(x => new UserDTO
+                    .Where(x => x.Role.Name.Equals("Mentor")).Select(x => new UserDTO
                     {
                         Id = x.Id,
                         Name = x.Name,
                         Surname = x.Surname,
                         Email = x.Email
                     })
-    .ToListAsync(cancellationToken);
-
-                return new Response
-                {
-                    Users = students
-                };
-            }
-            else if(userRole.Equals("Mentor"))
-            {
-                var studentIds = await _context.Mentor_Students
-                    .Where(x => x.Mentor_ID == userId).Select(x=> x.Student_ID).ToListAsync(cancellationToken);
-
-
-                var students = await _context.Users
-                                        .Where(x => studentIds.Contains(x.Id))
-                                        .Select(x => new UserDTO
-                                            {
-                                                Id=x.Id,
-                                                Name=x.Name,
-                                                Surname = x.Surname,
-                                               Email= x.Email,
-                                             
-                                        })
-                                        .ToListAsync(cancellationToken);
+                   .ToListAsync(cancellationToken);
 
                 return new Response
                 {
@@ -75,7 +52,7 @@ namespace Backend.Features.Users.GetAllStudents
             {
                 throw new UnauthorizedAccessException("You are not authorized to view this page");
             }
-            
+
 
 
         }
