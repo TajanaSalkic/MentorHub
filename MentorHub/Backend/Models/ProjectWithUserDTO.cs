@@ -1,10 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Backend.Models
+﻿namespace Backend.Models
 {
-    public class Project
+    public class ProjectWithUserDTO
     {
-        [Key]
         public long Id { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
@@ -16,14 +13,6 @@ namespace Backend.Models
 
         public string Url { get; set; }
 
-        public virtual ICollection<Task_Project_User> TaskProjectUsers { get; set; }
-    }
-
-    public enum ProjectStatus
-    {
-        Planning,
-        Active,
-        OnHold,
-        Completed
+        public string UserName { get; set; }
     }
 }

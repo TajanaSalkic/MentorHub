@@ -18,6 +18,11 @@
 
         public long TasksActive { get; set; }
         public long TasksDone { get; set; }
+       
+        public string Url { get; set; }
+
+        public long UserID { get; set; }
+        public string UserName { get; set; }
 
 
        /* public long ProjectId { get; set; }

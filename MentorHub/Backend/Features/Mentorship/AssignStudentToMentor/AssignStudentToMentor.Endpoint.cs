@@ -1,20 +1,22 @@
 ﻿using Carter;
 using MediatR;
 
-namespace Backend.Features.Groups.GetAllGroups
+namespace Backend.Features.Mentorship.AssignStudentToMentor
 {
-    public class GetAllGroupsModule : ICarterModule
+    public class AssignStudentToMentorEndpoint : ICarterModule
     {
         public void AddRoutes(IEndpointRouteBuilder app)
         {
-            app.MapGet("/api/groups", async (
+            app.MapPost("/api/mentorship", async (
+                Command command,
                 IMediator mediator,
                 CancellationToken cancellationToken) =>
             {
-                var result = await mediator.Send(new Command(), cancellationToken);
-                return Results.Ok(result);
+                var result = await mediator.Send(command, cancellationToken);
+
+                return Results.Created($"/api/groups/{result}", result);
             })
-            .WithName("GetAllGroups")
+            .WithName("AssignStudentToMentor")
             .WithOpenApi()
             .RequireAuthorization()
             .Produces<Response>(StatusCodes.Status201Created)

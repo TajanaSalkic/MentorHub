@@ -17,6 +17,8 @@ namespace Backend.Models
 
         public virtual ICollection<Task_Project_User> TaskProjectUsers { get; set; }
 
+        public ICollection<Comment> Comments { get; set; } = new List<Comment>();
+
         public virtual ICollection<Task_CommitLink> TaskCommitLinks { get; set; }
 
     }

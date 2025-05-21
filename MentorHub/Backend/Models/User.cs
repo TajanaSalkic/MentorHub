@@ -18,8 +18,11 @@ namespace Backend.Models
         public long Role_Id { get; set; }
         public virtual Role Role { get; set; }
 
+        public bool Approved { get; set; }
+
         public virtual ICollection<Task_Project_User> TaskProjectUsers { get; set; } = new List<Task_Project_User>();
-        public virtual ICollection<Group_User> GroupUsers { get; set; } = new List<Group_User>();
+
+        public ICollection<Comment> Comments { get; set; } = new List<Comment>();
 
         public virtual ICollection<Mentor_Student> MentorStudents { get; set; }
 

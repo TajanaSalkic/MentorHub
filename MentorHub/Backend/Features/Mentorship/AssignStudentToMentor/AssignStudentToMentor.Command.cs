@@ -14,7 +14,8 @@ namespace Backend.Features.Mentorship.AssignStudentToMentor
 
     public record Response
     {
-        public Mentor_Student Mentor_Student { get; init; }
+        public Mentor_Student Mentor_Student { get; set; }
+        public string Message { get; set; }
 
     }
 }
