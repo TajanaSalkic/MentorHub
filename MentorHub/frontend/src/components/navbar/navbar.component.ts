@@ -3,9 +3,9 @@ import { Component, HostListener, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { jwtDecode } from 'jwt-decode';
 
-
 @Component({
   selector: 'app-navbar',
+  standalone: true,
   imports: [CommonModule],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css'
@@ -25,7 +25,6 @@ export class NavbarComponent implements OnInit {
     if (token) {
       try {
         const decodedToken: any = jwtDecode(token); 
-
         console.log("Decodec",decodedToken);
         console.log("Name", decodedToken.name);
         this.userName = `${decodedToken.name} ${decodedToken.surname}`; 

@@ -1,0 +1,45 @@
+<div class="app-container">
+    <app-sidebar></app-sidebar>
+    
+    <div class="main-content">
+      <app-navbar></app-navbar>
+      
+      <div class="content-area">
+        <div class="user-list-header">
+          <h1 class="title">Users</h1>
+          <button class="assign-button" (click)="openAssignModal()">Assign user to mentor</button>
+        </div>
+        
+        <table class="user-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Surname</th>
+              <th>Email</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let user of students">
+              <td>{{ user.id }}</td>
+              <td>{{ user.name }}</td>
+              <td>{{ user.surname }}</td>
+              <td>{{ user.email }}</td>
+              <td>
+                <button class="action-button" (click)="downloadPDF(user.id)">Download PDF</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+  
+        <app-assign-project-modal 
+          *ngIf="isModalOpen" 
+          [projects]="projects" 
+          [students]="students" 
+          (closeModal)="isModalOpen = false" 
+          (assign)="assignProject($event)">
+        </app-assign-project-modal>
+      </div>
+    </div>
+  </div>

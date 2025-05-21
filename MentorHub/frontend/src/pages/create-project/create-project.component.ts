@@ -4,7 +4,6 @@ import { FormsModule, ReactiveFormsModule, FormGroup, FormBuilder, Validators } 
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
-import { SidebarComponent } from '../../components/sidebar/sidebar.component';
 import { QuillModule } from 'ngx-quill';
 
 interface Student {
@@ -17,7 +16,7 @@ interface Student {
 @Component({
   selector: 'app-create-project',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, NavbarComponent, SidebarComponent, QuillModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, NavbarComponent, QuillModule],
   templateUrl: './create-project.component.html',
   styleUrl: './create-project.component.css'
 })
@@ -26,7 +25,7 @@ export class CreateProjectComponent implements OnInit {
   students: Student[] = [];
   showStudentDropdown = false;
   selectedStudent: Student | null = null;
-
+  
   
 
   constructor(
@@ -40,7 +39,8 @@ export class CreateProjectComponent implements OnInit {
       startDate: [this.formatDate(new Date()), Validators.required],
       endDate: [this.formatDate(new Date()), Validators.required],
       points: [0, [Validators.required, Validators.min(0)]],
-      studentID: [0, Validators.required]
+      url: ['', Validators.required],
+      studentID: [null, Validators.required]
     });
   }
 
@@ -85,7 +85,6 @@ export class CreateProjectComponent implements OnInit {
     if (this.projectForm.valid) {
       const token = localStorage.getItem('token');
       const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-      
       const formValue = {...this.projectForm.value};
       formValue.startDate = new Date(formValue.startDate).toISOString();
       formValue.endDate = new Date(formValue.endDate).toISOString();

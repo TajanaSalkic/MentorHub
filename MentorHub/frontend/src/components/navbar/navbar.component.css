@@ -24,7 +24,34 @@
   }
 
 
-
+ .logo-container {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 2px solid #f0f0ff;
+  }
+  
+  .logo-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 2px;
+    width: 24px;
+    height: 24px;
+  }
+  
+  .logo-dot {
+    width: 6px;
+    height: 6px;
+    background-color: #333;
+    border-radius: 1px;
+  }
+  
+  .logo-text {
+    margin-left: 10px;
+    font-weight: 600;
+    font-size: 16px;
+  }
+  
 
 
 

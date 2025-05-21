@@ -1,0 +1,28 @@
+<div class="modal-overlay" (click)="close()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>Assign Project</h2>
+        <button class="close-button" (click)="close()">✖</button>
+      </div>
+  
+      <form (ngSubmit)="assignMentor()">
+        <div class="form-group">
+          <label for="mentor">Project</label>
+          <select [(ngModel)]="selectedProject" name="mentor" required>
+            <option *ngFor="let project of projects" [value]="project.id">{{ project.title }}</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="student">Student</label>
+          <select [(ngModel)]="selectedStudent" name="student" required>
+            <option *ngFor="let student of students" [value]="student.id">{{ student.name }}</option>
+          </select>
+        </div>
+  
+        <div *ngIf="responseMessage" class="response-message">{{ responseMessage }}</div>
+  
+        <button type="submit" class="assign-button">Assign</button>
+      </form>
+    </div>
+  </div>
+  
