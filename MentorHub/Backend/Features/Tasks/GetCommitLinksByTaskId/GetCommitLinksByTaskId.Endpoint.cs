@@ -1,21 +1,21 @@
 ﻿using Carter;
 using MediatR;
 
-namespace Backend.Features.Tasks.CreateTask
+namespace Backend.Features.Tasks.GetCommitLinksByTaskId
 {
-    public class CreateTaskModule : ICarterModule
+    public class GetCommitLinksbyTaskIdEndpoint : ICarterModule
     {
         public void AddRoutes(IEndpointRouteBuilder app)
         {
-            app.MapPost("/api/tasks", async (
-                Command command,
+            app.MapGet("/api/tasks/{id:long}/commits", async (
+                long id,
                 IMediator mediator,
                 CancellationToken cancellationToken) =>
             {
-                var result = await mediator.Send(command, cancellationToken);
-                return Results.Created($"/api/tasks/{result.TaskId}", result);
+                var result = await mediator.Send(new Command(id), cancellationToken);
+                return Results.Created($"/api/commits/", result);
             })
-            .WithName("CreateTask")
+            .WithName("GetCommitLinksbyTaskId")
             .WithOpenApi()
             .RequireAuthorization()
             .Produces<Response>(StatusCodes.Status201Created)

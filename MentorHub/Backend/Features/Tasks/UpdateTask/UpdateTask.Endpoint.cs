@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Backend.Features.Tasks.UpdateTask
 {
-    public class UpdateTaskModule : ICarterModule
+    public class UpdateTaskEndpoint : ICarterModule
     {
         public void AddRoutes(IEndpointRouteBuilder app)
         {

@@ -1,27 +1,24 @@
 ﻿using Carter;
 using MediatR;
-using Microsoft.AspNetCore.Mvc;
 
-namespace Backend.Features.Tasks.GradeTask
+namespace Backend.Features.Tasks.AssignTask
 {
-    public class GradeTaskModule : ICarterModule
+    public class AssignTaskEndpoint : ICarterModule
     {
         public void AddRoutes(IEndpointRouteBuilder app)
         {
-            app.MapPut("/api/tasks/grade", async (
-                [FromBody] Command command,
+            app.MapPost("/api/assigntasks", async (
+                Command command,
                 IMediator mediator,
                 CancellationToken cancellationToken) =>
             {
-                
-
                 var result = await mediator.Send(command, cancellationToken);
-                return Results.Ok(result);
+                return Results.Created($"/api/assigntasks/{result.TaskId}", result);
             })
-            .WithName("GradeTask")
+            .WithName("AssignTask")
             .WithOpenApi()
             .RequireAuthorization()
-            .Produces<Response>(StatusCodes.Status200OK)
+            .Produces<Response>(StatusCodes.Status201Created)
             .ProducesValidationProblem();
         }
     }

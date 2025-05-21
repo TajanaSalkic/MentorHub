@@ -1,21 +1,20 @@
 ﻿using Carter;
 using MediatR;
 
-namespace Backend.Features.Tasks.GetTaskById
+namespace Backend.Features.Tasks.GetAllTasks
 {
-    public class GetTaskByIdModule : ICarterModule
+    public class GetAllTasksEndpoint : ICarterModule
     {
         public void AddRoutes(IEndpointRouteBuilder app)
         {
-            app.MapGet("/api/tasks/{id:long}", async (
-                long id,
+            app.MapGet("/api/tasks", async (
                 IMediator mediator,
                 CancellationToken cancellationToken) =>
             {
-                var result = await mediator.Send(new Command(id), cancellationToken);
+                var result = await mediator.Send(new Command(), cancellationToken);
                 return Results.Ok(result);
             })
-            .WithName("GetTaskById")
+            .WithName("GetAllTasks")
             .WithOpenApi()
             .RequireAuthorization()
             .Produces<Response>(StatusCodes.Status201Created)

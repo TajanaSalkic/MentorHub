@@ -1,23 +1,22 @@
-﻿using Carter;
+﻿using Backend.Models;
+using Carter;
 using MediatR;
 
-namespace Backend.Features.Tasks.CommitLinkToTask
+namespace Backend.Features.Tasks.ChangeStatus
 {
-    public class LinkCommitsModule : ICarterModule
+    public class ChangeStatusTaskEndpoint : ICarterModule
     {
         public void AddRoutes(IEndpointRouteBuilder app)
         {
-            app.MapPost("/api/tasks/{taskId}/commits", async (
-                long taskId,
+            app.MapPut("/api/tasks/changestatus", async (
                 Command command,
                 IMediator mediator,
                 CancellationToken cancellationToken) =>
             {
-                command.TaskId = taskId; 
                 var result = await mediator.Send(command, cancellationToken);
-                return Results.Created($"/api/commits/{result.CommitId}", result);
+                return Results.Created($"/api/tasks/changestatus/{result.ProjectStatus}", result);
             })
-            .WithName("LinkCommits")
+            .WithName("ChangeStatusTask")
             .WithOpenApi()
             .RequireAuthorization()
             .Produces<Response>(StatusCodes.Status201Created)

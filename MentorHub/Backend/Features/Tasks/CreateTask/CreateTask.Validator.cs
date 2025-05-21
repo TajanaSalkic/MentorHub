@@ -26,8 +26,8 @@ namespace Backend.Features.Tasks.CreateTask
                 .WithMessage("End date must be after start date");
 
             RuleFor(x => x.Points)
-                .GreaterThan(0)
-                .WithMessage("Points must be greater than 0");
+               .InclusiveBetween(0, 100)
+               .WithMessage("Points must be between 0 and 100.");
 
             RuleFor(x => x.ProjectId)
                 .NotEmpty()

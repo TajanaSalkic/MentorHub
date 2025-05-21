@@ -1,22 +1,21 @@
-﻿using Backend.Models;
-using Carter;
+﻿using Carter;
 using MediatR;
 
-namespace Backend.Features.Tasks.ChangeStatus
+namespace Backend.Features.Tasks.CreateTask
 {
-    public class ChangeStatusTaskModule : ICarterModule
+    public class CreateTaskEndpoint : ICarterModule
     {
         public void AddRoutes(IEndpointRouteBuilder app)
         {
-            app.MapPut("/api/tasks/changestatus", async (
+            app.MapPost("/api/tasks", async (
                 Command command,
                 IMediator mediator,
                 CancellationToken cancellationToken) =>
             {
                 var result = await mediator.Send(command, cancellationToken);
-                return Results.Created($"/api/tasks/changestatus/{result.ProjectStatus}", result);
+                return Results.Created($"/api/tasks/{result.TaskId}", result);
             })
-            .WithName("ChangeStatusTask")
+            .WithName("CreateTask")
             .WithOpenApi()
             .RequireAuthorization()
             .Produces<Response>(StatusCodes.Status201Created)

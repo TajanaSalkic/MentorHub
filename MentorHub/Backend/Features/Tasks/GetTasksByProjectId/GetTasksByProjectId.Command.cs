@@ -1,13 +1,13 @@
 ﻿using Backend.Models;
 using MediatR;
 
-namespace Backend.Features.Tasks.GetTaskById
+namespace Backend.Features.Tasks.GetTasksByProjectId
 {
     public record Command(long Id) : IRequest<Response>;
 
     public record Response
     {
-        public string Message { get; set; }
-        public Models.Task Task { get; init; }
+        public List<Models.Task> Tasks { get; init; }
     }
+
 }

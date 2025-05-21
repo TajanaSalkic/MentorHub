@@ -3,7 +3,7 @@ using MediatR;
 
 namespace Backend.Features.Tasks.DeleteTask
 {
-    public class DeleteTaskModule : ICarterModule
+    public class DeleteTaskEndpoint : ICarterModule
     {
         public void AddRoutes(IEndpointRouteBuilder app)
         {

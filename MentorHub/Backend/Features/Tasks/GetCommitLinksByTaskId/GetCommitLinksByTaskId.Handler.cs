@@ -2,13 +2,15 @@
 using Backend.Models;
 using FluentValidation;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
-namespace Backend.Features.Tasks.CommitLinkToTask
+namespace Backend.Features.Tasks.GetCommitLinksByTaskId
 {
     public class Handler : IRequestHandler<Command, Response>
     {
         private readonly ApplicationDbContext _context;
         private readonly IValidator<Command> _validator;
+
 
         public Handler(ApplicationDbContext context, IValidator<Command> validator)
         {
@@ -24,25 +26,14 @@ namespace Backend.Features.Tasks.CommitLinkToTask
             {
                 throw new ValidationException(validationResult.Errors);
             }
-            var commitLink = new CommitLink
-            {
-                Url = request.CommitUrl,
-            };
 
-            _context.CommitLinks.Add(commitLink);
-            await _context.SaveChangesAsync(cancellationToken);
-
-            var taskCommitLink = new Task_CommitLink
-            {
-                TaskId = request.TaskId,
-                CommitLink_ID = commitLink.Id
-            };
-            _context.Task_CommitLinks.Add(taskCommitLink);
-            await _context.SaveChangesAsync(cancellationToken);
+            var links = _context.Task_CommitLinks.Where(x => x.TaskId == request.TaskId)
+                .Include(x => x.CommitLink)
+                .Select(x => x.CommitLink).ToList();
 
             return new Response
             {
-                CommitId = commitLink.Id
+               Links = links 
             };
         }
     }

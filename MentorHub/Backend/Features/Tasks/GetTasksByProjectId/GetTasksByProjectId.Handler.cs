@@ -2,19 +2,24 @@
 using Backend.Models;
 using FluentValidation;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
-namespace Backend.Features.Tasks.CommitLinkToTask
+namespace Backend.Features.Tasks.GetTasksByProjectId
 {
     public class Handler : IRequestHandler<Command, Response>
     {
+
         private readonly ApplicationDbContext _context;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IValidator<Command> _validator;
 
-        public Handler(ApplicationDbContext context, IValidator<Command> validator)
+        public Handler(ApplicationDbContext context, IHttpContextAccessor httpContextAccessor, IValidator<Command> validator)
         {
             _context = context;
+            _httpContextAccessor = httpContextAccessor;
             _validator = validator;
         }
+
 
         public async Task<Response> Handle(Command request, CancellationToken cancellationToken)
         {
@@ -24,25 +29,18 @@ namespace Backend.Features.Tasks.CommitLinkToTask
             {
                 throw new ValidationException(validationResult.Errors);
             }
-            var commitLink = new CommitLink
-            {
-                Url = request.CommitUrl,
-            };
+            var taskIds = await _context.Task_Projects
+                .Where(x => x.Project_ID == request.Id)
+                .Select(x => x.Task_ID)
+                .ToListAsync();
 
-            _context.CommitLinks.Add(commitLink);
-            await _context.SaveChangesAsync(cancellationToken);
-
-            var taskCommitLink = new Task_CommitLink
-            {
-                TaskId = request.TaskId,
-                CommitLink_ID = commitLink.Id
-            };
-            _context.Task_CommitLinks.Add(taskCommitLink);
-            await _context.SaveChangesAsync(cancellationToken);
+            var tasks = await _context.Tasks
+                .Where(t => taskIds.Contains(t.Id))
+                .ToListAsync();
 
             return new Response
             {
-                CommitId = commitLink.Id
+                Tasks = tasks
             };
         }
     }
