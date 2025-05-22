@@ -35,7 +35,7 @@ namespace Backend.Features.Users.Login
                 issuer: "https://localhost:7035",
                 audience: "https://localhost:7035",
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(30),
+                expires: DateTime.Now.AddMinutes(60),
                 signingCredentials: creds);
             return new JwtSecurityTokenHandler().WriteToken(token);
         }

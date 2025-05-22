@@ -6,7 +6,7 @@
       
       <div class="content-area">
         <div class="user-list-header">
-          <h1 class="title">Users</h1>
+          <h1 class="title">Task changes history</h1>
           <button class="assign-button" (click)="generatePdf()">Download PDF</button>
         </div>
         
@@ -33,7 +33,7 @@
               <td>{{ taskChange.fieldChanged }}</td>
               <td>{{ taskChange.oldValue }}</td>
               <td>{{ taskChange.newValue }}</td>
-              <td>{{ taskChange.changedAt }}</td>
+              <td>{{ taskChange.changedAt | date:'yyyy-MM-dd' }}</td>
 
 
               

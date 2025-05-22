@@ -94,7 +94,6 @@ export class TaskDashboardComponent implements OnInit {
   fetchTaskDetails(id: number): void {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-
     this.isLoading = true;
     this.http.get(`https://localhost:7035/api/tasks/${id}`, { headers }).subscribe({
       next: (response: any) => {
@@ -112,10 +111,10 @@ export class TaskDashboardComponent implements OnInit {
   fetchComments(taskId: number): void {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-
     this.http.get<{comments: Comment[]}>(`https://localhost:7035/api/tasks/${taskId}/comments`, { headers }).subscribe({
       next: (response) => {
         this.comments = response.comments;
+        console.log(this.comments);
       },
       error: (error) => {
         console.error('Failed to fetch comments', error);
@@ -126,10 +125,10 @@ export class TaskDashboardComponent implements OnInit {
   fetchCommitLinks(taskId: number): void {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    
     this.http.get<{links: CommitLink[]}>(`https://localhost:7035/api/tasks/${taskId}/commits`, { headers }).subscribe({
       next: (response) => {
-        this.commitLinks = response.links;
+        this.commitLinks = response.links
+        console.log(this.commitLinks);
       },
       error: (error) => {
         console.error('Failed to fetch commit links', error);
@@ -152,16 +151,13 @@ export class TaskDashboardComponent implements OnInit {
 
   addComment(): void {
     if (!this.newComment.trim()) return;
-    
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    
     const comment = {
       content: this.newComment,
       taskId: this.taskId,
       createdDate: new Date().toISOString()
     };
-    
     this.http.post('https://localhost:7035/api/comments/add', comment, { headers }).subscribe({
       next: (response: any) => {
         this.comments.push(response.comment);
@@ -181,15 +177,12 @@ export class TaskDashboardComponent implements OnInit {
 
   updateComment(): void {
     if (!this.editingCommentId || !this.editingCommentContent.trim()) return;
-    
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    
     const comment = {
       id: this.editingCommentId,
       content: this.editingCommentContent
     };
-    
     this.http.put(`https://localhost:7035/api/comments/${this.editingCommentId}`, comment, { headers }).subscribe({
       next: (response: any) => {
         const index = this.comments.findIndex(c => c.id === this.editingCommentId);
@@ -211,7 +204,6 @@ export class TaskDashboardComponent implements OnInit {
   deleteComment(commentId: number): void {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    
     this.http.delete(`https://localhost:7035/api/comments/${commentId}`, { 
       headers
     }).subscribe({
@@ -226,15 +218,14 @@ export class TaskDashboardComponent implements OnInit {
 
   addCommitLink(): void {
     if (!this.newCommitLink.trim()) return;
-    
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    
     const commitLink = {
-      url: this.newCommitLink,
+      commitUrl: this.newCommitLink,
       taskId: this.taskId
     };
-    
+
+    console.log(commitLink);  
     this.http.post(`https://localhost:7035/api/tasks/${this.taskId}/commits`, commitLink, { headers }).subscribe({
       next: (response: any) => {
         this.commitLinks.push({
@@ -257,8 +248,7 @@ export class TaskDashboardComponent implements OnInit {
 
   isCommentOwner(userId: number): boolean {
     console.log("Comment user Id:", userId, typeof userId);
-console.log("Current user:", this.currentUserId, typeof this.currentUserId);
-
+    console.log("Current user:", this.currentUserId, typeof this.currentUserId);
     console.log(userId === this.currentUserId);
     return userId === Number(this.currentUserId);
   }
@@ -269,11 +259,8 @@ console.log("Current user:", this.currentUserId, typeof this.currentUserId);
 
   deleteTask(taskId: number) {
     const confirmed = window.confirm('Are you sure you want to delete this task?');
-
-    
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-
     if (confirmed) {
       this.http.delete(`https://localhost:7035/api/tasks/${taskId}`, { headers }).subscribe({
         next: () => {

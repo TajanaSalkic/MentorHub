@@ -85,7 +85,7 @@ namespace Backend.Features.Tasks.CreateTask
             {
                 User_ID = request.StudentId,
                 Project_ID = request.ProjectId,
-                Task_ID = null,
+                Task_ID = task.Id,
                 Creator = false
             };
 

@@ -61,6 +61,8 @@ export class EditTaskComponent {
       .subscribe({
         next: (response: any) => {
           this.task = response.task;
+          this.task.startDate = this.task.startDate.substring(0, 10);
+          this.task.endDate = this.task.endDate.substring(0, 10);
           console.log(this.task);
         },
         error: (error) => console.error('Error loading project:', error)

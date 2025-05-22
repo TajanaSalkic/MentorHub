@@ -118,7 +118,7 @@ export class AssignedStudentsComponent {
         const blobUrl = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = blobUrl;
-        a.download = `${response.fileName}.pdf`;
+        a.download = `${response.fileName}`;
         a.click();
   
         window.URL.revokeObjectURL(blobUrl);

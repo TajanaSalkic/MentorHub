@@ -47,7 +47,7 @@ export class TaskChangesTableComponent {
           const blobUrl = window.URL.createObjectURL(blob);
           const a = document.createElement('a');
           a.href = blobUrl;
-          a.download = `${response.filename}.pdf`;
+          a.download = `${response.filename}`;
           a.click();
     
           window.URL.revokeObjectURL(blobUrl);

@@ -20,11 +20,13 @@
           <div class="detail-section">
             <div class="description-header">
               <h3>Description</h3>
+              
               <div class="task-actions">
                 <button class="edit-button" (click)="editTask(task.id)">✎</button>
                 <button class="delete-button" (click)="deleteTask(task.id)">-</button>
               </div>
             </div>
+            <p>{{ task.description }}</p>
           </div>
           <div class="task-data">
             <div class="data-item">
@@ -56,7 +58,7 @@
             <div class="new-comment" *ngIf="showCommentEditor">
               <div class="comment-label">New comment</div>
               <div class="editor-container">
-                  <textarea [(ngModel)]="newComment" placeholder="Write your comment here..."></textarea>
+                  <textarea [(ngModel)]="newComment" placeholder="Write your comment here..." style="width: 550px; height: 100px;"></textarea>
                 <div class="button-group">
                   <button class="cancel-button" (click)="showCommentEditor = false">Cancel</button>
                   <button class="save-button" (click)="addComment()">Save</button>
@@ -66,18 +68,18 @@
             <div class="comments-list">
               <div *ngFor="let comment of comments" class="comment-item">
                 <div class="comment-header">
-                  <span class="commenter-name">{{ comment.name }} {{ comment.surname }}</span>
+                  <span class="commenter-name" style="font-weight: bold;">{{ comment.name }} {{ comment.surname }}</span>
                   <span class="comment-date">{{ formatDate(comment.createdDate) }}</span>
                 </div>       
                 <div class="comment-content-container">
-                  <div class="comment-content" *ngIf="editingCommentId !== comment.id" [innerHTML]="comment.content"></div>
+                  <div class="comment-content" *ngIf="editingCommentId !== comment.id" [innerHTML]="comment.content" style="padding:10px;"> </div>
                   <div class="comment-actions" *ngIf="isCommentOwner(comment.userId)">
-                    <button class="edit-button" (click)="startEditComment(comment)" *ngIf="editingCommentId !== comment.id">Edit</button>
-                    <button class="delete-button" (click)="deleteComment(comment.id)" *ngIf="editingCommentId !== comment.id">Delete</button>
+                    <button class="edit-button" (click)="startEditComment(comment)" *ngIf="editingCommentId !== comment.id">✎</button>
+                    <button class="delete-button" (click)="deleteComment(comment.id)" *ngIf="editingCommentId !== comment.id">-</button>
                   </div>
                 </div>
                 <div class="edit-comment" *ngIf="editingCommentId === comment.id">
-                  <quill-editor [(ngModel)]="editingCommentContent"></quill-editor>
+                  <textarea [(ngModel)]="editingCommentContent"style="width: 300px; height: 100px;"></textarea>
                   <div class="button-group">
                     <button class="cancel-button" (click)="cancelEditComment()">Cancel</button>
                     <button class="save-button" (click)="updateComment()">Save</button>
