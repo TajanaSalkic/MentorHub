@@ -44,3 +44,18 @@ h2 {
   background-color: #ccc;
   cursor: not-allowed;
 }
+
+.login-link {
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.text-link {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.text-link:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}

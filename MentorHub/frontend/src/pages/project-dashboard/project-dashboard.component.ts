@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { SidebarComponent } from '../../components/sidebar/sidebar.component';
@@ -25,7 +25,8 @@ export class ProjectDashboardComponent implements OnInit {
   
   constructor(
     private route: ActivatedRoute,
-    private http: HttpClient
+    private http: HttpClient,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -56,5 +57,9 @@ export class ProjectDashboardComponent implements OnInit {
   getStatusClass(status: number): string {
     const statusString = ProjectStatus[status].toLowerCase();
     return `status-${statusString}`;
+  }
+
+  editProject(projectId: number) {
+    this.router.navigate(['/edit-project', projectId]);
   }
 }

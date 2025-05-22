@@ -1,0 +1,56 @@
+<div class="app-container">
+  <app-sidebar></app-sidebar>
+  <div class="main-content">
+    <app-navbar></app-navbar>
+    <div class="content-area">
+      <div *ngIf="error" class="error-message">
+        {{ error }}
+      </div>
+      
+      <div *ngIf="isLoading" class="loading-spinner">
+        Loading...
+      </div>
+
+      <ng-container *ngIf="!isLoading && !error">
+        <div class="board-header-row">
+          <h2 class="board-title">Board</h2>
+          <button class="create-task-btn" (click)="createTask()">Create task</button>
+        </div>
+        
+        <div class="board-columns">
+          <div *ngFor="let col of columns; let colIdx = index" class="board-column">
+            <div class="column-header">
+              {{ col.label }}
+              <span class="task-count">{{ col.tasks.length }}</span>
+            </div>
+            <div class="task-list"
+                 cdkDropList
+                 [cdkDropListData]="col.tasks"
+                 [id]="'column-' + colIdx"
+                 [cdkDropListConnectedTo]="getConnectedLists()"
+                 (cdkDropListDropped)="onDrop($event)">
+              <div *ngFor="let task of col.tasks" 
+                   class="task-card" 
+                   cdkDrag
+                   [cdkDragData]="task"
+                   (click)="viewTaskDetails(task.id)"
+                   [cdkDragDisabled]="false">
+                <div class="task-title">{{ task.title }}</div>
+                <div class="task-assignee" *ngIf="task.assigneeName">{{ task.assigneeName }}</div>
+                <div class="task-controls" (click)="$event.stopPropagation()">
+                  <select [(ngModel)]="task.status"
+                          (change)="changeTaskStatus(task, colIdx)"
+                          [ngClass]="getStatusClass(task.status)">
+                    <option *ngFor="let status of statuses" [ngValue]="status.value">
+                      {{ status.label }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>

@@ -4,27 +4,59 @@
     <div class="form-group">
       <label for="name">Name:</label>
       <input id="name" formControlName="name" required class="form-control" />
+      <div *ngIf="registerForm.get('name')?.touched && registerForm.get('name')?.invalid" class="error-message">
+        <small *ngIf="getFieldError('name', 'required')">Name is required.</small>
+        <small *ngIf="getFieldError('name', 'maxlength')">Name cannot exceed 50 characters.</small>
+      </div>
     </div>
+
     <div class="form-group">
       <label for="surname">Surname:</label>
       <input id="surname" formControlName="surname" required class="form-control" />
+      <div *ngIf="registerForm.get('surname')?.touched && registerForm.get('surname')?.invalid" class="error-message">
+        <small *ngIf="getFieldError('surname', 'required')">Surname is required.</small>
+        <small *ngIf="getFieldError('surname', 'maxlength')">Surname cannot exceed 50 characters.</small>
+      </div>
     </div>
+
     <div class="form-group">
       <label for="email">Email:</label>
       <input id="email" formControlName="email" type="email" required class="form-control" />
-      <div *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched" class="error-message">
-        <small *ngIf="registerForm.get('email')?.errors?.['required']">Email is required.</small>
-        <small *ngIf="registerForm.get('email')?.errors?.['email']">Invalid email format.</small>
+      <div *ngIf="registerForm.get('email')?.touched && registerForm.get('email')?.invalid" class="error-message">
+        <small *ngIf="getFieldError('email', 'required')">Email is required.</small>
+        <small *ngIf="getFieldError('email', 'email')">Invalid email format.</small>
       </div>
     </div>
+
     <div class="form-group">
       <label for="password">Password:</label>
       <input id="password" formControlName="password" type="password" required class="form-control" />
-      <div *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched" class="error-message">
-        <small *ngIf="registerForm.get('password')?.errors?.['required']">Password is required.</small>
-        <small *ngIf="registerForm.get('password')?.errors?.['minlength']">Password must be at least 6 characters.</small>
+      <div *ngIf="registerForm.get('password')?.touched && registerForm.get('password')?.invalid" class="error-message">
+        <small *ngIf="getFieldError('password', 'required')">Password is required.</small>
+        <small *ngIf="getFieldError('password', 'minlength')">Password must be at least 6 characters.</small>
+        <small *ngIf="getFieldError('password', 'pattern') && !registerForm.get('password')?.errors?.['minlength']">
+          Password must include at least one uppercase letter and one number.
+        </small>
       </div>
     </div>
+
+    <div class="form-group">
+      <label for="roleId">Role</label>
+      <select id="roleId" formControlName="roleId" required class="form-control">
+        <option value="2">Student</option>
+        <option value="3">Mentor</option>
+      </select>
+      <div *ngIf="registerForm.get('roleId')?.touched && registerForm.get('roleId')?.invalid" class="error-message">
+        <small *ngIf="getFieldError('roleId', 'required')">Role is required.</small>
+      </div>
+    </div>
+
     <button type="submit" [disabled]="registerForm.invalid" class="btn btn-primary">Register</button>
   </form>
+
+  <div class="login-link">
+    <p>Already have an account? 
+      <a (click)="login()" class="text-link">Log in here</a>
+    </p>
+  </div>
 </div>

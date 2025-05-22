@@ -26,7 +26,7 @@ namespace Backend.Features.Comments.GetAllCommentsByTaskId
 
             var comments = _context.Comments.Where(x => x.TaskId == request.TaskId)
                 .Include(x=> x.User)
-                .OrderByDescending(x => x.CreatedDate)
+                .OrderBy(x => x.CreatedDate)
                 .Select(x=> new Models.CommentDTO
                 {
                     Id = x.Id,

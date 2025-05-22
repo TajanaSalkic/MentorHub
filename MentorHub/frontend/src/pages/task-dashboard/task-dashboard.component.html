@@ -1,0 +1,119 @@
+<div class="app-container">
+  <app-sidebar></app-sidebar>
+  <div class="main-content">
+    <app-navbar></app-navbar>    
+    <div class="content-area">
+      <div *ngIf="error" class="error-message">
+        {{ error }}
+      </div>     
+      <div *ngIf="isLoading" class="loading-spinner">
+        Loading...
+      </div>
+      <ng-container *ngIf="!isLoading && !error">
+        <div class="task-header">
+          <div class="task-title-section">
+            <div class="favorite-icon">★</div>
+            <h1>{{ task.title }}</h1>
+          </div>
+        </div>        
+        <div class="task-details">
+          <div class="detail-section">
+            <div class="description-header">
+              <h3>Description</h3>
+              
+              <div class="task-actions">
+                <button class="edit-button" (click)="editTask(task.id)">✎</button>
+                <button class="delete-button" (click)="deleteTask(task.id)">-</button>
+              </div>
+            </div>
+            <p>{{ task.description }}</p>
+          </div>
+          <div class="task-data">
+            <div class="data-item">
+              <span class="label">Start date</span>
+              <span class="value">{{ task.startDate | date:'dd MMM, yyyy' }}</span>
+            </div>
+            <div class="data-item">
+              <span class="label">End date</span>
+              <span class="value">{{ task.endDate | date:'dd MMM, yyyy' }}</span>
+            </div>
+            <div class="data-item">
+              <span class="label">Status</span>
+              <span class="value status-badge" [ngClass]="getStatusClass(task.status)">
+                {{ getStatusString(task.status) }}
+              </span>
+            </div>
+            <div class="data-item">
+              <span class="label">Points</span>
+              <span class="value">{{ task.points }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="two-column-container">
+          <div class="comments-section">
+            <div class="section-header">
+              <h3>Comments</h3>
+              <button class="add-button" (click)="showCommentEditor = true" *ngIf="!showCommentEditor">+</button>
+            </div>           
+            <div class="new-comment" *ngIf="showCommentEditor">
+              <div class="comment-label">New comment</div>
+              <div class="editor-container">
+                  <textarea [(ngModel)]="newComment" placeholder="Write your comment here..." style="width: 550px; height: 100px;"></textarea>
+                <div class="button-group">
+                  <button class="cancel-button" (click)="showCommentEditor = false">Cancel</button>
+                  <button class="save-button" (click)="addComment()">Save</button>
+                </div>
+              </div>
+            </div>      
+            <div class="comments-list">
+              <div *ngFor="let comment of comments" class="comment-item">
+                <div class="comment-header">
+                  <span class="commenter-name" style="font-weight: bold;">{{ comment.name }} {{ comment.surname }}</span>
+                  <span class="comment-date">{{ formatDate(comment.createdDate) }}</span>
+                </div>       
+                <div class="comment-content-container">
+                  <div class="comment-content" *ngIf="editingCommentId !== comment.id" [innerHTML]="comment.content" style="padding:10px;"> </div>
+                  <div class="comment-actions" *ngIf="isCommentOwner(comment.userId)">
+                    <button class="edit-button" (click)="startEditComment(comment)" *ngIf="editingCommentId !== comment.id">✎</button>
+                    <button class="delete-button" (click)="deleteComment(comment.id)" *ngIf="editingCommentId !== comment.id">-</button>
+                  </div>
+                </div>
+                <div class="edit-comment" *ngIf="editingCommentId === comment.id">
+                  <textarea [(ngModel)]="editingCommentContent"style="width: 300px; height: 100px;"></textarea>
+                  <div class="button-group">
+                    <button class="cancel-button" (click)="cancelEditComment()">Cancel</button>
+                    <button class="save-button" (click)="updateComment()">Save</button>
+                  </div>
+                </div>
+              </div>
+              <div *ngIf="comments.length === 0" class="no-items">
+                No comments available
+              </div>
+            </div>
+          </div>
+          <div class="commit-links-section">
+            <div class="section-header">
+              <h3>Commit Links</h3>
+              <button class="add-button" (click)="showCommitLinkInput = true" *ngIf="!showCommitLinkInput">+</button>
+            </div>
+            <div class="commit-link-input" *ngIf="showCommitLinkInput">
+              <input type="text" placeholder="Enter commit URL..." [(ngModel)]="newCommitLink" />
+              <div class="button-group">
+                <button class="save-button" (click)="addCommitLink()">Save</button>
+                <button class="cancel-button" (click)="showCommitLinkInput = false">Cancel</button>
+              </div>
+            </div>
+            <div class="commit-links-list">
+              <div *ngFor="let link of commitLinks" class="commit-link-item">
+                <a [href]="link.url" target="_blank">{{ link.url }}</a>
+              </div>
+              <div *ngIf="commitLinks.length === 0" class="no-items">
+                No commit links available
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>

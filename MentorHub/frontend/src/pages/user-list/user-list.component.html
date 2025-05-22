@@ -1,0 +1,53 @@
+<div class="app-container">
+    <app-sidebar></app-sidebar>
+    
+    <div class="main-content">
+      <app-navbar></app-navbar>
+      
+      <div class="content-area">
+        <div class="user-list-header">
+          <h1 class="title">Users</h1>
+          <button class="assign-button" (click)="openAssignModal()">Assign user to mentor</button>
+        </div>
+        
+        <table class="user-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Surname</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Approved</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let user of users">
+              <td>{{ user.id }}</td>
+              <td>{{ user.name }}</td>
+              <td>{{ user.surname }}</td>
+              <td>{{ user.email }}</td>
+              <td>{{ user.role }}</td>
+              <td>{{user.approved}}</td>
+              <td>
+                <button 
+                [ngClass]="user.approved ? 'disapprove-btn' : 'approve-btn'"
+                (click)="toggleApproval(user)">
+                {{ user.approved ? 'Disapprove' : 'Approve' }}
+              </button>
+                            </td>
+            </tr>
+          </tbody>
+        </table>
+  
+        <app-assign-mentor-modal 
+          *ngIf="isModalOpen" 
+          [mentors]="mentors" 
+          [students]="students" 
+          (closeModal)="isModalOpen = false" 
+          (assign)="assignMentor($event)">
+        </app-assign-mentor-modal>
+      </div>
+    </div>
+  </div>

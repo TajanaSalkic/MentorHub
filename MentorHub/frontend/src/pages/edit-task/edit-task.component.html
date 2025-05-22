@@ -1,0 +1,71 @@
+<div class="app-container">
+    <app-sidebar></app-sidebar>
+    <div class="main-content">
+      <app-navbar></app-navbar>
+      <div class="content-area">
+        <div class="create-project-container">
+          <div class="create-project-header">
+            <h1>Edit task-details</h1>
+            <button class="create-btn" (click)="onSubmit()">Save</button>
+          </div>
+          <form (ngSubmit)="onSubmit()">
+            <div class="form-grid">
+              <div class="left-column">
+                <div class="form-group title-group">
+                  <div class="favorite-icon">★</div>
+                  <input type="text" [(ngModel)]="task.title" name="name" placeholder="Input a name..." class="title-input">
+                </div>
+                <div class="form-group">
+                  <label>Description</label>
+                  <div class="text-editor-container">
+                    <textarea [(ngModel)]="task.description" name="description" class="description-input"></textarea>
+                  </div>
+                </div>
+              </div>
+              <div class="right-column">
+                <div class="form-group">
+                  <label>Planning</label>
+                </div>
+                <div class="form-group">
+                  <label>Start date</label>
+                  <input type="date" [(ngModel)]="task.startDate" name="startDate" class="date-input">
+                </div>
+                <div class="form-group">
+                  <label>End date</label>
+                  <input type="date" [(ngModel)]="task.endDate" name="endDate" class="date-input">
+                </div>
+                <div class="form-group">
+                  <label>Status</label>
+                  <select [(ngModel)]="task.status" name="status" class="date-input">
+                    <option value="1">Active</option>
+                    <option value="0">Planning</option>
+                    <option value="2">On Hold</option>
+                    <option value="3">Completed</option>
+                  </select>
+                </div>
+
+                <div class="form-group" *ngIf="userRole === 'Mentor'">
+                  <label>Points</label>
+                  <input type="number" [(ngModel)]="task.points" name="points" class="date-input" min="0" max="100" required>
+                </div>
+                <div class="form-group" *ngIf="userRole === 'Mentor'">
+                  <label>Student</label>
+                  <div class="student-dropdown">
+                    <div class="selected-student" (click)="showStudentDropdown = !showStudentDropdown">
+                      {{ selectedStudentName }}
+                      <span class="dropdown-arrow">▼</span>
+                    </div>
+                    <div class="dropdown-menu" *ngIf="showStudentDropdown">
+                      <div class="dropdown-item" *ngFor="let student of students" (click)="selectStudent(student)">
+                        {{ student.name }} {{ student.surname }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div> 

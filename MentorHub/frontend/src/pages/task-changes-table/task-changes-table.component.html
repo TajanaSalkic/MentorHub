@@ -1,0 +1,47 @@
+<div class="app-container">
+    <app-sidebar></app-sidebar>
+    
+    <div class="main-content">
+      <app-navbar></app-navbar>
+      
+      <div class="content-area">
+        <div class="user-list-header">
+          <h1 class="title">Task changes history</h1>
+          <button class="assign-button" (click)="generatePdf()">Download PDF</button>
+        </div>
+        
+        <table class="user-table">
+          <thead>
+            <tr>
+              <th>ChangeID</th>
+              <th>TaskID</th>
+              <th>Task Title</th>
+              <th>Changed By</th>
+
+              <th>Field Changed</th>
+              <th>Old Value</th>
+              <th>New Value</th>
+              <th>Changed At</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let taskChange of taskChanges">
+              <td>{{ taskChange.changeID }}</td>
+              <td>{{ taskChange.taskID }}</td>
+              <td>{{ taskChange.title }}</td>
+              <td>{{ taskChange.name }}  {{ taskChange.surname }}</td>
+              <td>{{ taskChange.fieldChanged }}</td>
+              <td>{{ taskChange.oldValue }}</td>
+              <td>{{ taskChange.newValue }}</td>
+              <td>{{ taskChange.changedAt | date:'yyyy-MM-dd' }}</td>
+
+
+              
+            </tr>
+          </tbody>
+        </table>
+  
+        
+      </div>
+    </div>
+  </div>
