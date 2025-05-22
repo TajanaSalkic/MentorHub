@@ -7,6 +7,6 @@ namespace Backend.Features.Projects.GetAllProjects
 
     public record Response
     {
-        public List<Project> Projects { get; init; }
+        public List<ProjectWithUserDTO> Projects { get; init; }
     }
 }

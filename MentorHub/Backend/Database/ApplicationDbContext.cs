@@ -19,15 +19,15 @@ namespace Backend.Database
 
         public DbSet<Task_Project_User> Task_Projects { get; set; }
 
-        public DbSet<Group> Group { get; set; }
-
-        public DbSet<Group_User> Group_Users { get; set; }
-
         public DbSet<CommitLink> CommitLinks { get; set; }
 
         public DbSet<Task_CommitLink> Task_CommitLinks { get; set; }
 
         public DbSet<Mentor_Student> Mentor_Students { get; set; }
+
+        public DbSet<Comment> Comments { get; set; }
+
+        public DbSet<TaskChanges> TaskChanges { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -38,18 +38,6 @@ namespace Backend.Database
                 .WithMany()
                 .HasForeignKey(u => u.Role_Id)
                 .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Group_User>()
-               .HasOne(tpu => tpu.User)
-               .WithMany(u => u.GroupUsers)
-               .HasForeignKey(tpu => tpu.User_ID)
-               .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<Group_User>()
-              .HasOne(tpu => tpu.Group)
-              .WithMany(u => u.GroupUsers)
-              .HasForeignKey(tpu => tpu.Group_ID)
-              .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Task_CommitLink>()
              .HasOne(tpu => tpu.CommitLink)
@@ -93,6 +81,28 @@ namespace Backend.Database
                 .WithMany()
                 .HasForeignKey(ms => ms.Student_ID)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Comment>()
+               .HasOne(c => c.Task)
+               .WithMany(t => t.Comments)
+               .HasForeignKey(c => c.TaskId);
+
+            modelBuilder.Entity<Comment>()
+                .HasOne(c => c.User)
+                .WithMany(u => u.Comments)
+                .HasForeignKey(c => c.UserId);
+
+            modelBuilder.Entity<TaskChanges>()
+               .HasOne(u => u.Task)
+               .WithMany()
+               .HasForeignKey(u => u.TaskID)
+               .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<TaskChanges>()
+               .HasOne(u => u.User)
+               .WithMany()
+               .HasForeignKey(u => u.UserID)
+               .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

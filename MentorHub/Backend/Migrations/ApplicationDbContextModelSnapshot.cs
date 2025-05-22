@@ -22,6 +22,36 @@ namespace Backend.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("Backend.Models.Comment", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long>("TaskId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TaskId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Comments");
+                });
+
             modelBuilder.Entity("Backend.Models.CommitLink", b =>
                 {
                     b.Property<long>("Id")
@@ -37,49 +67,6 @@ namespace Backend.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("CommitLinks");
-                });
-
-            modelBuilder.Entity("Backend.Models.Group", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Group");
-                });
-
-            modelBuilder.Entity("Backend.Models.Group_User", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
-
-                    b.Property<long>("Group_ID")
-                        .HasColumnType("bigint");
-
-                    b.Property<bool>("Mentor")
-                        .HasColumnType("boolean");
-
-                    b.Property<long>("User_ID")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Group_ID");
-
-                    b.HasIndex("User_ID");
-
-                    b.ToTable("Group_Users");
                 });
 
             modelBuilder.Entity("Backend.Models.Mentor_Student", b =>
@@ -141,6 +128,10 @@ namespace Backend.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.HasKey("Id");
 
                     b.ToTable("Projects");
@@ -194,6 +185,44 @@ namespace Backend.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Tasks");
+                });
+
+            modelBuilder.Entity("Backend.Models.TaskChanges", b =>
+                {
+                    b.Property<int>("ChangeID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ChangeID"));
+
+                    b.Property<DateTime>("ChangedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("FieldChanged")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("NewValue")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("OldValue")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<long>("TaskID")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("UserID")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("ChangeID");
+
+                    b.HasIndex("TaskID");
+
+                    b.HasIndex("UserID");
+
+                    b.ToTable("TaskChanges");
                 });
 
             modelBuilder.Entity("Backend.Models.Task_CommitLink", b =>
@@ -258,6 +287,9 @@ namespace Backend.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
+                    b.Property<bool>("Approved")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("text");
@@ -284,21 +316,21 @@ namespace Backend.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Backend.Models.Group_User", b =>
+            modelBuilder.Entity("Backend.Models.Comment", b =>
                 {
-                    b.HasOne("Backend.Models.Group", "Group")
-                        .WithMany("GroupUsers")
-                        .HasForeignKey("Group_ID")
-                        .OnDelete(DeleteBehavior.Restrict)
+                    b.HasOne("Backend.Models.Task", "Task")
+                        .WithMany("Comments")
+                        .HasForeignKey("TaskId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Backend.Models.User", "User")
-                        .WithMany("GroupUsers")
-                        .HasForeignKey("User_ID")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .WithMany("Comments")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Group");
+                    b.Navigation("Task");
 
                     b.Navigation("User");
                 });
@@ -324,6 +356,25 @@ namespace Backend.Migrations
                     b.Navigation("Mentor");
 
                     b.Navigation("Student");
+                });
+
+            modelBuilder.Entity("Backend.Models.TaskChanges", b =>
+                {
+                    b.HasOne("Backend.Models.Task", "Task")
+                        .WithMany()
+                        .HasForeignKey("TaskID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Backend.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Task");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Backend.Models.Task_CommitLink", b =>
@@ -387,11 +438,6 @@ namespace Backend.Migrations
                     b.Navigation("TaskCommitLinks");
                 });
 
-            modelBuilder.Entity("Backend.Models.Group", b =>
-                {
-                    b.Navigation("GroupUsers");
-                });
-
             modelBuilder.Entity("Backend.Models.Project", b =>
                 {
                     b.Navigation("TaskProjectUsers");
@@ -399,6 +445,8 @@ namespace Backend.Migrations
 
             modelBuilder.Entity("Backend.Models.Task", b =>
                 {
+                    b.Navigation("Comments");
+
                     b.Navigation("TaskCommitLinks");
 
                     b.Navigation("TaskProjectUsers");
@@ -406,7 +454,7 @@ namespace Backend.Migrations
 
             modelBuilder.Entity("Backend.Models.User", b =>
                 {
-                    b.Navigation("GroupUsers");
+                    b.Navigation("Comments");
 
                     b.Navigation("MentorStudents");
 

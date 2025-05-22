@@ -1,5 +1,6 @@
 ﻿using Backend.Database;
 using Backend.Models;
+using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,37 +11,41 @@ namespace Backend.Features.Tasks.GetTaskById
 
         private readonly ApplicationDbContext _context;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IValidator<Command> _validator;
 
-        public Handler(ApplicationDbContext context, IHttpContextAccessor httpContextAccessor)
+        public Handler(ApplicationDbContext context, IHttpContextAccessor httpContextAccessor, IValidator<Command> validator)
         {
             _context = context;
             _httpContextAccessor = httpContextAccessor;
+            _validator = validator;
         }
 
 
         public async Task<Response> Handle(Command request, CancellationToken cancellationToken)
         {
+            var validationResult = await _validator.ValidateAsync(request, cancellationToken);
+            if (!validationResult.IsValid)
+            {
+                throw new ValidationException(validationResult.Errors);
+            }
+
+            
 
             var task = await _context.Tasks
-                             .Where(x => x.Id == request.Id)
-                             .Include(x => x.TaskCommitLinks)
-                             .ThenInclude(x => x.CommitLink)
-                             .Select(x => new TaskDTO
-                             {
-                                 Id = x.Id,
-                                 Title = x.Title,
-                                 CommitLinks = x.TaskCommitLinks.Select(tcl => new CommitLink
-                                 {
-                                     Id = tcl.CommitLink.Id,
-                                     Url = tcl.CommitLink.Url
-                                 }).ToList()
-                             })
-                             .FirstOrDefaultAsync(cancellationToken);
-            
+    .Where(x => x.Id == request.Id)
+    .FirstOrDefaultAsync(cancellationToken);
+
+            if (task == null)
+            {
+                return new Response { Message = "Task not found." };
+            }
+
+
             return new Response
             {
                 Task = task
             };
+
         }
     }
 }

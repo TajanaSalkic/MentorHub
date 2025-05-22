@@ -61,8 +61,9 @@ namespace Backend.Features.Users.GetAllStudents
                                                 Id=x.Id,
                                                 Name=x.Name,
                                                 Surname = x.Surname,
-                                               Email= x.Email
-                                            })
+                                               Email= x.Email,
+                                             
+                                        })
                                         .ToListAsync(cancellationToken);
 
                 return new Response

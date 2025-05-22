@@ -7,6 +7,7 @@ namespace Backend.Features.Tasks.GetTaskById
 
     public record Response
     {
-        public TaskDTO Task { get; init; }
+        public string Message { get; set; }
+        public Models.Task Task { get; init; }
     }
 }

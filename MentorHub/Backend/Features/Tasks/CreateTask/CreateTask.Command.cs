@@ -10,6 +10,8 @@ namespace Backend.Features.Tasks.CreateTask
         public DateTime EndDate { get; init; }
         public double Points { get; init; }
         public int ProjectId { get; init; }
+
+        public long StudentId { get; init; }
     }
 
     public record Response

@@ -20,5 +20,7 @@ namespace Backend.Features.Users.Login
         public string Name { get; init; } = string.Empty;
         public string Role { get; init; } = string.Empty;
         public string Token { get; init; } = string.Empty;
+
+        public bool Approved { get; init; } 
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Backend.Database;
 using Backend.Models;
+using FluentValidation;
 using MediatR;
 using System.Security.Claims;
 
@@ -9,19 +10,24 @@ namespace Backend.Features.Projects.CreateProject
     {
         private readonly ApplicationDbContext _context;
         private readonly IHttpContextAccessor _httpContextAccessor;
-
-        public Handler(ApplicationDbContext context, IHttpContextAccessor httpContextAccessor)
+        private readonly IValidator<Command> _validator;
+        public Handler(ApplicationDbContext context, IHttpContextAccessor httpContextAccessor, IValidator<Command> validator)
         {
             _context = context;
             _httpContextAccessor = httpContextAccessor;
+            _validator = validator;
         }
-
         public async Task<Response> Handle(Command request, CancellationToken cancellationToken)
         {
+            var validationResult = await _validator.ValidateAsync(request, cancellationToken);
+            if (!validationResult.IsValid)
+            {
+                throw new ValidationException(validationResult.Errors);
+            }
+
             var userIdClaim = _httpContextAccessor.HttpContext?.User?.FindFirst("userId");
             if (userIdClaim == null)
                 throw new UnauthorizedAccessException("User ID not found in token");
-
             var userId = long.Parse(userIdClaim.Value);
 
             var project = new Project
@@ -32,8 +38,8 @@ namespace Backend.Features.Projects.CreateProject
                 EndDate = request.EndDate,
                 Status = ProjectStatus.Planning,
                 Points = request.Points,
+                Url = request.Url
             };
-
             _context.Projects.Add(project);
             await _context.SaveChangesAsync(cancellationToken);
 
