@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { AuthService } from '../../services/auth.service'; // Adjust the path as necessary
+import { AuthService } from '../../services/auth.service'; 
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
@@ -13,6 +13,7 @@ import { CommonModule } from '@angular/common';
 })
 export class LoginComponent {
   loginForm: FormGroup;
+  serverError: string | null = null;
 
   constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {
     this.loginForm = this.fb.group({
@@ -22,18 +23,27 @@ export class LoginComponent {
   }
 
   onSubmit() {
+    this.serverError = null; 
     if (this.loginForm.valid) {
       this.authService.login(this.loginForm.value).subscribe({
         next: (response) => {
           console.log("Login successful", response);
-
-          this.router.navigate(['/home']); 
+          this.router.navigate(['/home']);
         },
         error: (error) => {
-        
-          console.error('Login failed', error);
+          if (error.status === 500 && typeof error.error === 'string') {
+            
+            this.serverError = 'Your account has not been approved yet. Please wait for an administrator to approve your account.';
+          } else {
+            this.serverError = 'Login failed. Please check your credentials.';
+          }
         }
       });
     }
   }
+
+  register(){
+    this.router.navigate(['/register']);
+  }
+  
 }

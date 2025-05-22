@@ -6,6 +6,7 @@ import { SidebarComponent } from '../../components/sidebar/sidebar.component';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { jwtDecode } from 'jwt-decode';
 
 export enum ProjectStatus {
   Planning = 0,
@@ -33,13 +34,25 @@ export class HomePageComponent implements OnInit {
     { label: 'Completed', value: 3},
   ];
 
+  userRole: string = '';
+
+
   
   @Input() searchTerm: string = '';  
-  userName: string = 'Tajana Salkić';
 
   constructor(private http: HttpClient, private router: Router) {}
 
   ngOnInit(): void {
+    const token = localStorage.getItem('token');
+    if (token) {
+      try {
+        const decoded: any = jwtDecode(token);
+        this.userRole = decoded.role || '';
+        console.log("Role", this.userRole);
+      } catch (e) {
+        this.userRole = '';
+      }
+    }
     this.fetchProjects();
   }
 
@@ -51,6 +64,7 @@ export class HomePageComponent implements OnInit {
       next: (response: any) => {
         this.projects = response.projects;
         this.filteredProjects = response.projects; 
+        console.log(this.projects);
       },
       error: (error) => {
         console.error('Failed to fetch projects', error);
@@ -92,5 +106,9 @@ export class HomePageComponent implements OnInit {
 
   createProject(){
     this.router.navigate(['/create-project'])
+  }
+
+  editProject(projectId: number) {
+    this.router.navigate(['/edit-project', projectId]);
   }
 }

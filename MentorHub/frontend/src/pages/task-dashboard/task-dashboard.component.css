@@ -1,0 +1,404 @@
+.app-container {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f9f9f9;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.main-content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.content-area {
+  padding: 20px;
+  flex-grow: 1;
+}
+
+.error-message {
+  color: #dc3545;
+  padding: 10px;
+  background-color: #f8d7da;
+  border-radius: 4px;
+  margin-bottom: 15px;
+}
+
+.loading-spinner {
+  text-align: center;
+  padding: 20px;
+  color: #6c5ce7;
+  font-weight: 500;
+}
+
+/* Task Header Styles */
+.task-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.task-title-section {
+  display: flex;
+  align-items: center;
+}
+
+.favorite-icon {
+  color: #ffc107;
+  font-size: 24px;
+  margin-right: 10px;
+}
+
+h1 {
+  font-size: 24px;
+  color: #6c5ce7;
+  font-weight: 500;
+  margin: 0;
+}
+
+/* Task Details Styles */
+.task-details {
+  background-color: white;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.detail-section {
+  margin-bottom: 20px;
+}
+
+.detail-section h3 {
+  font-size: 16px;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+.description-content {
+  position: relative;
+  padding-right: 30px;
+}
+
+.task-data {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.data-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.label {
+  font-size: 14px;
+  color: #777;
+  margin-bottom: 5px;
+}
+
+.value {
+  font-size: 16px;
+  color: #333;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 14px;
+  text-align: center;
+}
+
+.status-active {
+  background-color: #e6f7e6;
+  color: #28a745;
+}
+
+.status-planning {
+  background-color: #e6f0ff;
+  color: #0066cc;
+}
+
+.status-onhold {
+  background-color: #f2f2f2;
+  color: #6c757d;
+}
+
+.status-done {
+  background-color: #e6ffe6;
+  color: #198754;
+}
+
+/* Commit Links Section */
+.commit-links-section {
+  background-color: white;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.section-header h3 {
+  font-size: 16px;
+  color: #555;
+  margin: 0;
+}
+
+.add-button {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background-color: #6c5ce7;
+  color: white;
+  border: none;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.commit-link-input {
+  margin-bottom: 15px;
+  padding: 10px;
+  background-color: #f8f8f8;
+  border-radius: 4px;
+}
+
+.commit-link-input input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.button-group {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.save-button {
+  background-color: #6c5ce7;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.cancel-button {
+  background-color: #f8f8f8;
+  color: #555;
+  border: 1px solid #ddd;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.commit-links-list {
+  margin-top: 10px;
+}
+
+.commit-link-item {
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.commit-link-item a {
+  color: #6c5ce7;
+  text-decoration: none;
+  word-break: break-all;
+}
+
+.commit-link-item a:hover {
+  text-decoration: underline;
+}
+
+/* Two Column Layout */
+.two-column-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.two-column-container .comments-section, 
+.two-column-container .commit-links-section {
+  margin-bottom: 0;
+  height: 100%;
+}
+
+/* Media query for smaller screens */
+@media (max-width: 768px) {
+  .two-column-container {
+    grid-template-columns: 1fr;
+  }
+  
+  .two-column-container .comments-section,
+  .two-column-container .commit-links-section {
+    margin-bottom: 20px;
+  }
+  
+  .two-column-container .commit-links-section {
+    order: -1;
+  }
+}
+
+/* Comments Section */
+.comments-section {
+  background-color: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.comment-label {
+  font-weight: 500;
+  margin-bottom: 10px;
+  color: #6c5ce7;
+}
+
+.editor-container {
+  border: 1px solid #eee;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.editor-container quill-editor {
+  min-height: 150px;
+}
+
+.editor-container .button-group {
+  padding: 10px;
+  background-color: #f8f8f8;
+}
+
+.description-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.task-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.task-actions .edit-button,
+.task-actions .delete-button {
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  border: none;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.task-actions .edit-button {
+  background-color: #6c5ce7;
+  color: white;
+}
+
+.task-actions .delete-button {
+  background-color: #dc3545;
+  color: white;
+}
+
+.comments-list {
+  margin-top: 15px;
+}
+
+.comment-item {
+  padding: 15px;
+  border-bottom: 1px solid #eee;
+}
+
+.comment-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.commenter-name {
+  font-weight: 500;
+  color: #555;
+  margin-right: 10px;
+}
+
+.comment-date {
+  color: #888;
+  font-size: 12px;
+}
+
+.comment-actions {
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.edit-button, .delete-button {
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  border: none;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.edit-btn {
+  background-color: transparent;
+  border: none;
+  color: #6c5ce7;
+  font-size: 16px;
+  cursor: pointer;
+  margin-left: 10px;
+  padding: 4px;
+}
+
+.edit-btn:hover {
+  color: #4a47a3;
+}
+
+
+.delete-button {
+  background-color: #dc3545;
+  color: white;
+}
+
+.comment-content {
+  line-height: 1.5;
+  color: #333;
+}
+
+.edit-comment {
+  margin-top: 10px;
+}
+
+.edit-comment quill-editor {
+  min-height: 100px;
+  margin-bottom: 10px;
+}
+
+.no-items {
+  color: #888;
+  font-style: italic;
+  padding: 10px 0;
+}

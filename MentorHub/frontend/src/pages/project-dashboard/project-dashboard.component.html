@@ -11,7 +11,7 @@
             <h1>{{ project.title }}</h1>
           </div>
           <div class="project-link">
-            Link: <a href="https://github/Tajana-Project{{ projectId }}" target="_blank">https://github/Tajana-Project{{ projectId }}</a>
+            Link: <a href="{{project.url }}" target="_blank">{{ project.url }}</a>
           </div>
         </div>
         
@@ -21,6 +21,10 @@
             <div class="description-content">
               <p>{{ project.description }}</p>
               <button class="edit-btn">✎</button>
+
+              <button (click)="editProject(project.id)" class="edit-btn">
+                ✎
+              </button>
             </div>
           </div>
           

@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@angular/cdk": "^19.2.14",
     "jwt-decode": "^4.0.0"
   }
 }

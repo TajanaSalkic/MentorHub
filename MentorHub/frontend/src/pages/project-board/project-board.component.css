@@ -1,0 +1,215 @@
+.app-container {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f9f9f9;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.main-content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.content-area {
+  padding: 20px 32px;
+  flex-grow: 1;
+}
+
+.board-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.board-title {
+  color: #7749F8;
+  font-size: 1.7rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.create-task-btn {
+  background-color: #d6c6fa;
+  color: #7749F8;
+  border: none;
+  padding: 8px 24px;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.create-task-btn:hover {
+  background-color: #c1aef7;
+}
+
+.board-search-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.search-input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 1rem;
+  margin-right: 8px;
+}
+
+.search-icon {
+  font-size: 1.2rem;
+  color: #aaa;
+}
+
+.board-columns {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+.board-column {
+  background: #f7f7fa;
+  border-radius: 12px;
+  padding: 16px 10px 24px 10px;
+  min-width: 220px;
+  box-shadow: 0 2px 8px rgba(119,73,248,0.04);
+  display: flex;
+  flex-direction: column;
+  min-height: 400px;
+}
+
+.column-header {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #7749F8;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.task-count {
+  background: #e6e6fa;
+  color: #7749F8;
+  border-radius: 50%;
+  padding: 2px 10px;
+  font-size: 0.95rem;
+  margin-left: 8px;
+}
+
+.task-list {
+  flex: 1;
+  min-height: 60px;
+  padding: 8px;
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
+}
+
+/* Style for when dragging over a column */
+.cdk-drop-list-dragging {
+  background-color: rgba(119, 73, 248, 0.05);
+  border: 2px dashed #7749F8;
+}
+
+/* Style for the placeholder - this is where the task will be dropped */
+.cdk-drag-placeholder {
+  opacity: 0.5;
+  border: 2px dashed #7749F8;
+  margin-bottom: 14px;
+}
+
+/* Style for the preview of the task being dragged */
+.cdk-drag-preview {
+  box-shadow: 0 5px 15px rgba(0,0,0,0.15) !important;
+  border-left: 4px solid #7749F8;
+  opacity: 0.9;
+}
+
+/* Style for other cards while one is being dragged */
+.cdk-drag-animating {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.task-card {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  padding: 14px 12px;
+  margin-bottom: 14px;
+  cursor: pointer;
+  transition: box-shadow 0.2s, transform 0.2s;
+  border-left: 4px solid #7749F8;
+  position: relative;
+}
+
+.task-card:hover {
+  box-shadow: 0 4px 12px rgba(119,73,248,0.18);
+  transform: translateY(-2px);
+  background-color: #fcfcff;
+}
+
+.task-card:active {
+  cursor: grabbing;
+  box-shadow: 0 4px 12px rgba(119,73,248,0.10);
+}
+
+.task-title {
+  font-weight: 600;
+  font-size: 1.08rem;
+  color: #333;
+  margin-bottom: 6px;
+}
+
+.task-assignee {
+  font-size: 0.95rem;
+  color: #888;
+}
+
+/* Clean look for the dropdown */
+select {
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 0.95em;
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+/* Status-specific styles */
+.status-planning {
+  border-color: #3498db; /* Blue */
+  background-color: #eaf4fc;
+  color: #2c3e50;
+}
+.status-active {
+  border-color: #27ae60; /* Green */
+  background-color: #eafaf1;
+  color: #1e8449;
+}
+.status-done {
+  border-color: #8e44ad; /* Purple */
+  background-color: #f5eafc;
+  color: #6c3483;
+}
+.status-onhold {
+  border-color: #e67e22; /* Orange */
+  background-color: #fdf0e7;
+  color: #ca6f1e;
+}
+
+@media (max-width: 900px) {
+  .board-columns {
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+}
+
+@media (max-width: 600px) {
+  .board-columns {
+    grid-template-columns: 1fr;
+  }
+} 
