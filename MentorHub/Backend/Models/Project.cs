@@ -14,7 +14,7 @@ namespace Backend.Models
 
         public double Points { get; set; }
 
-        public string Url { get; set; }
+        public string? Url { get; set; }
 
         public virtual ICollection<Task_Project_User> TaskProjectUsers { get; set; }
     }

@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Backend.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250521085416_LastMigration")]
-    partial class LastMigration
+    [Migration("20250528154409_FinalMigration")]
+    partial class FinalMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -132,7 +132,6 @@ namespace Backend.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Url")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");

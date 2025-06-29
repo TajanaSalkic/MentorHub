@@ -6,6 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
 import { SidebarComponent } from '../../components/sidebar/sidebar.component';
 import { jwtDecode } from 'jwt-decode';
+import { SnackbarService } from '../../services/snackbar.service';
 
 
 interface Student {
@@ -36,6 +37,8 @@ export class CreateTaskComponent {
   projectId: number = 0;
   role: string = '';
   studentId:string = '';
+  todayString: string = '';
+  tomorrowString: string = '';
 
   
   
@@ -44,7 +47,8 @@ export class CreateTaskComponent {
     private fb: FormBuilder,
     private http: HttpClient,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private snackbar: SnackbarService
   ) {
     
   }
@@ -82,6 +86,22 @@ export class CreateTaskComponent {
       this.fetchStudents();          
     }
 
+    this.setDates();
+
+  }
+
+
+  setDates() {
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    this.todayString = this.formatDate(today);
+    this.tomorrowString = this.formatDate(tomorrow);
+
+    this.projectForm.patchValue({
+      startDate: this.todayString,
+      endDate: this.tomorrowString
+    });
   }
 
   fetchStudents() {
@@ -131,11 +151,13 @@ export class CreateTaskComponent {
       
         this.http.post('https://localhost:7035/api/tasks', formValue, { headers }).subscribe({
           next: (response) => {
+            this.snackbar.showSuccess('Task created successfully!')
             console.log('Task created successfully', response);
             this.router.navigate([`/project-board/${this.projectId}`]);
 
           },
           error: (error) => {
+            this.snackbar.showError('Failed to create task.')
             console.error('Failed to create task', error);
           }
         });

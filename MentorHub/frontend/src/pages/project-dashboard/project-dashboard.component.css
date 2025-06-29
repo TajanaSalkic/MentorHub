@@ -79,6 +79,14 @@
     cursor: pointer;
     font-size: 18px;
   }
+
+  .edit-btn2 {
+    background: none;
+    border: none;
+    color: #6c5ce7;
+    cursor: pointer;
+    font-size: 18px;
+  }
   
   .project-data {
     display: grid;

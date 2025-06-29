@@ -35,6 +35,8 @@ namespace Backend.Features.Tasks.GetTaskById
     .Where(x => x.Id == request.Id)
     .FirstOrDefaultAsync(cancellationToken);
 
+            var userID = await _context.Task_Projects.Where(x => x.Task_ID == request.Id && x.Creator==false).Select(x => x.User_ID).FirstOrDefaultAsync();
+
             if (task == null)
             {
                 return new Response { Message = "Task not found." };
@@ -43,7 +45,9 @@ namespace Backend.Features.Tasks.GetTaskById
 
             return new Response
             {
-                Task = task
+                Task = task,
+                UserId = userID
+              
             };
 
         }

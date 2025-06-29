@@ -51,8 +51,8 @@ namespace Backend.Features.Projects.UpdateProject
 
             project.Title = request.Title ?? project.Title;
             project.Description = request.Description ?? project.Description;
-            project.StartDate = request.StartDate ?? project.StartDate;
-            project.EndDate = request.EndDate ?? project.EndDate;
+            project.StartDate = request.StartDate?.ToUniversalTime() ?? project.StartDate;
+            project.EndDate = request.EndDate?.ToUniversalTime() ?? project.EndDate;
             project.Status = request.Status ?? project.Status;
             project.Points = request.Points ?? project.Points;
             project.Url = request.Url ?? project.Url;
@@ -61,15 +61,10 @@ namespace Backend.Features.Projects.UpdateProject
 
             if (userRole.Equals("Mentor"))
             {
-                var studentTaskProject = new Task_Project_User
-                {
-                    User_ID = (long)request.StudentID,
-                    Project_ID = project.Id,
-                    Task_ID = null,
-                    Creator = false
-                };
+                var studentTaskPRoject = _context.Task_Projects.Where(x => x.Project_ID == request.Id && x.Creator == false && x.Task_ID == null).FirstOrDefault();
 
-                _context.Task_Projects.Add(studentTaskProject);
+                studentTaskPRoject.User_ID = request.StudentID ?? studentTaskPRoject.User_ID;
+
                 await _context.SaveChangesAsync(cancellationToken);
             }
                 return new Response

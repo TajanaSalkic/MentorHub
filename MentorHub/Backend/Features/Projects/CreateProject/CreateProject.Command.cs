@@ -11,7 +11,7 @@ namespace Backend.Features.Projects.CreateProject
         public DateTime EndDate { get; init; }
         public double Points { get; set; }
         
-        public string Url { get; set; }
+        public string? Url { get; set; }
         public long StudentID { get; set; }
     }
 

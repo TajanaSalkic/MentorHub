@@ -49,7 +49,7 @@ export const routes: Routes = [
         path: 'edit-project/:id', 
         component: EditProjectComponent,
         canActivate:[AuthGuard],
-        data: {roles:['Admin', 'Mentor']}
+        data: {roles:['Admin', 'Mentor', 'Student']}
     },
     { 
         path: 'project-board/:id', 

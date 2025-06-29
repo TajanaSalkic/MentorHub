@@ -79,18 +79,24 @@ namespace Backend.Features.Tasks.CreateTask
                 await _context.SaveChangesAsync(cancellationToken);
             }
 
-            
-
-            var studentTaskProject = new Task_Project_User
+            if (userRole.Equals("Mentor"))
             {
-                User_ID = request.StudentId,
-                Project_ID = request.ProjectId,
-                Task_ID = task.Id,
-                Creator = false
-            };
 
-            _context.Task_Projects.Add(studentTaskProject);
-            await _context.SaveChangesAsync(cancellationToken);
+                var studentTaskProject = new Task_Project_User
+                {
+                    User_ID = request.StudentId,
+                    Project_ID = request.ProjectId,
+                    Task_ID = task.Id,
+                    Creator = false
+
+                };
+
+                _context.Task_Projects.Add(studentTaskProject);
+                await _context.SaveChangesAsync(cancellationToken);
+            } 
+
+
+            
 
             return new Response
             {

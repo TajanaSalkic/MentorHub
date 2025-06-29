@@ -27,12 +27,7 @@ namespace Backend.Features.Projects.CreateProject
                .InclusiveBetween(0, 100)
                .WithMessage("Points must be between 0 and 100.");
             
-            RuleFor(x => x.Url)
-                .NotEmpty()
-                .WithMessage("Commit URL is required.")
-                .Must(uri => Uri.TryCreate(uri, UriKind.Absolute, out var parsed)
-                             && (parsed.Scheme == Uri.UriSchemeHttp || parsed.Scheme == Uri.UriSchemeHttps))
-                .WithMessage("Commit URL must be a valid absolute URL.");
+           
             ;
         }
     }

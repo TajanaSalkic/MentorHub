@@ -12,7 +12,11 @@
           </div>
           <div class="project-link">
             Link: <a href="{{project.url }}" target="_blank">{{ project.url }}</a>
+            <button (click)="editProject(project.id)" class="edit-btn2" *ngIf="userRole==='Student'">
+              ✎
+            </button>
           </div>
+          
         </div>
         
         <div class="project-details">
@@ -20,9 +24,7 @@
             <h3>Description</h3>
             <div class="description-content">
               <p>{{ project.description }}</p>
-              <button class="edit-btn">✎</button>
-
-              <button (click)="editProject(project.id)" class="edit-btn">
+              <button (click)="editProject(project.id)" class="edit-btn" *ngIf="userRole==='Mentor'">
                 ✎
               </button>
             </div>

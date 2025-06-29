@@ -7,6 +7,7 @@ import { NavbarComponent } from '../../components/navbar/navbar.component';
 import { FormsModule } from '@angular/forms';
 import { jwtDecode } from 'jwt-decode';
 import { QuillModule } from 'ngx-quill';
+import { SnackbarService } from '../../services/snackbar.service';
 
 export enum TaskStatus {
   Planning = 0,
@@ -65,7 +66,8 @@ export class TaskDashboardComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private snackbar: SnackbarService
   ) {}
 
   ngOnInit(): void {
@@ -78,7 +80,6 @@ export class TaskDashboardComponent implements OnInit {
       this.getCurrentUserId();
     });
   }
-
   getCurrentUserId(): void {
     const token = localStorage.getItem('token');
     if (token) {
@@ -90,7 +91,6 @@ export class TaskDashboardComponent implements OnInit {
       }
     }
   }
-
   fetchTaskDetails(id: number): void {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
@@ -107,14 +107,12 @@ export class TaskDashboardComponent implements OnInit {
       }
     });
   }
-
   fetchComments(taskId: number): void {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     this.http.get<{comments: Comment[]}>(`https://localhost:7035/api/tasks/${taskId}/comments`, { headers }).subscribe({
       next: (response) => {
         this.comments = response.comments;
-        console.log(this.comments);
       },
       error: (error) => {
         console.error('Failed to fetch comments', error);
@@ -128,27 +126,22 @@ export class TaskDashboardComponent implements OnInit {
     this.http.get<{links: CommitLink[]}>(`https://localhost:7035/api/tasks/${taskId}/commits`, { headers }).subscribe({
       next: (response) => {
         this.commitLinks = response.links
-        console.log(this.commitLinks);
       },
       error: (error) => {
         console.error('Failed to fetch commit links', error);
       }
     });
   }
-
   getStatusString(status: number): string {
     return TaskStatus[status];
   }
-  
   getStatusClass(status: number): string {
     const statusString = TaskStatus[status].toLowerCase();
     return `status-${statusString}`;
   }
-
   formatDate(date: string | Date): string {
     return new Date(date).toLocaleString();
   }
-
   addComment(): void {
     if (!this.newComment.trim()) return;
     const token = localStorage.getItem('token');
@@ -163,18 +156,17 @@ export class TaskDashboardComponent implements OnInit {
         this.comments.push(response.comment);
         this.newComment = '';
         this.showCommentEditor = false;
+        this.snackbar.showSuccess('Comment added successfully!')
       },
       error: (error) => {
-        console.error('Failed to add comment', error);
+        this.snackbar.showError('Failed to add comment.')
       }
     });
   }
-
   startEditComment(comment: Comment): void {
     this.editingCommentId = comment.id;
     this.editingCommentContent = comment.content;
   }
-
   updateComment(): void {
     if (!this.editingCommentId || !this.editingCommentContent.trim()) return;
     const token = localStorage.getItem('token');
@@ -191,12 +183,13 @@ export class TaskDashboardComponent implements OnInit {
             ...this.comments[index],
             content: this.editingCommentContent
           };
+          this.snackbar.showSuccess('Comment updated successfully!')
         }
         this.editingCommentId = null;
         this.editingCommentContent = '';
       },
       error: (error) => {
-        console.error('Failed to update comment', error);
+        this.snackbar.showError('Failed to update comment.')
       }
     });
   }
@@ -209,9 +202,11 @@ export class TaskDashboardComponent implements OnInit {
     }).subscribe({
       next: () => {
         this.comments = this.comments.filter(c => c.id !== commentId);
+        this.snackbar.showSuccess('Comment deleted successfully!')
+
       },
       error: (error) => {
-        console.error('Failed to delete comment', error);
+        this.snackbar.showError('Failed to delete comment.')
       }
     });
   }
@@ -225,7 +220,6 @@ export class TaskDashboardComponent implements OnInit {
       taskId: this.taskId
     };
 
-    console.log(commitLink);  
     this.http.post(`https://localhost:7035/api/tasks/${this.taskId}/commits`, commitLink, { headers }).subscribe({
       next: (response: any) => {
         this.commitLinks.push({
@@ -234,9 +228,11 @@ export class TaskDashboardComponent implements OnInit {
         });
         this.newCommitLink = '';
         this.showCommitLinkInput = false;
+        this.snackbar.showSuccess('commit link added successfully!')
+
       },
       error: (error) => {
-        console.error('Failed to add commit link', error);
+        this.snackbar.showError('Failed to add commit link.')
       }
     });
   }
@@ -247,9 +243,6 @@ export class TaskDashboardComponent implements OnInit {
   }
 
   isCommentOwner(userId: number): boolean {
-    console.log("Comment user Id:", userId, typeof userId);
-    console.log("Current user:", this.currentUserId, typeof this.currentUserId);
-    console.log(userId === this.currentUserId);
     return userId === Number(this.currentUserId);
   }
 
@@ -264,12 +257,12 @@ export class TaskDashboardComponent implements OnInit {
     if (confirmed) {
       this.http.delete(`https://localhost:7035/api/tasks/${taskId}`, { headers }).subscribe({
         next: () => {
-          alert('Task successfully deleted.');
+          this.snackbar.showSuccess('Task deleted successfully!')
           this.router.navigate(['/project-board', this.projectId]);
         },
         error: (err) => {
-          console.error('Error deleting task:', err);
-          this.error = 'Failed to delete task. Please try again later.';
+          this.snackbar.showError('Failed to delete task.')
+
         }
       });
     }

@@ -124,7 +124,7 @@ namespace Backend.Features.PDF.GeneratePDFReport
             {
 
                 var tasks = await _context.Task_Projects
-                    .Where(tp => tp.Project_ID == project.Id && tp.Task_ID != null)
+                    .Where(tp => tp.Project_ID == project.Id && tp.Task_ID != null && tp.Creator == false)
                     .Include(tp => tp.Task)
                     .Select(tp => tp.Task)
                     .ToListAsync(cancellationToken);

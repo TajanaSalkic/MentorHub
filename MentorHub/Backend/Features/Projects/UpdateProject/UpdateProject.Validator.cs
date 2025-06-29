@@ -50,6 +50,18 @@ namespace Backend.Features.Projects.UpdateProject
                     .GreaterThan(0)
                     .WithMessage("Student ID must be greater than zero.");
             });
+
+            When(x => x.Url != null , () =>
+            {
+                RuleFor(x => x.Url)
+                    .NotEmpty()
+                    .WithMessage("Commit URL is required.")
+                    .Must(uri => Uri.TryCreate(uri, UriKind.Absolute, out var parsed)
+                                 && (parsed.Scheme == Uri.UriSchemeHttp || parsed.Scheme == Uri.UriSchemeHttps))
+                    .WithMessage("Commit URL must be a valid absolute URL.");
+            });
         }
     }
 }
+
+

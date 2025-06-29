@@ -13,45 +13,95 @@
             <div class="left-column">
               <div class="form-group title-group">
                 <div class="favorite-icon">★</div>
-                <input type="text" [(ngModel)]="project.title" name="name" placeholder="Input a name..." class="title-input">
+                <input
+                  type="text"
+                  [(ngModel)]="project.title"
+                  name="name"
+                  placeholder="Input a name..."
+                  class="title-input"
+                  [readonly]="userRole === 'Student'"
+                />
               </div>
+        
               <div class="form-group">
                 <label>Description</label>
                 <div class="text-editor-container">
-                  <textarea [(ngModel)]="project.description" name="description" class="description-input"></textarea>
+                  <textarea
+                    [(ngModel)]="project.description"
+                    name="description"
+                    class="description-input"
+                    [readonly]="userRole === 'Student'"
+                  ></textarea>
                 </div>
               </div>
             </div>
+        
             <div class="right-column">
               <div class="form-group">
                 <label>Planning</label>
               </div>
+        
               <div class="form-group">
                 <label>Start date</label>
-                <input type="date" [(ngModel)]="project.startDate" name="startDate" class="date-input">
+                <input
+                  type="date"
+                  [(ngModel)]="project.startDate"
+                  name="startDate"
+                  class="date-input"
+                  readonly
+                />
               </div>
+        
               <div class="form-group">
                 <label>End date</label>
-                <input type="date" [(ngModel)]="project.endDate" name="endDate" class="date-input">
+                <input
+                  type="date"
+                  [(ngModel)]="project.endDate"
+                  name="endDate"
+                  class="date-input"
+                  [readonly]="userRole === 'Student'"
+                />
               </div>
+        
               <div class="form-group">
                 <label>Status</label>
-                <select [(ngModel)]="project.status" name="status" class="date-input">
+                <select
+                  [(ngModel)]="project.status"
+                  name="status"
+                  class="date-input"
+                >
                   <option value="1">Active</option>
                   <option value="0">Planning</option>
                   <option value="2">On Hold</option>
                   <option value="3">Completed</option>
                 </select>
               </div>
+        
               <div class="form-group">
                 <label>Link</label>
-                <input type="text" [(ngModel)]="project.url" name="link" class="date-input">
+                <input
+                  type="text"
+                  [(ngModel)]="project.url"
+                  name="link"
+                  class="date-input"
+                  [readonly]="userRole !== 'Student'"
+                />
               </div>
-
+        
               <div class="form-group">
                 <label>Points</label>
-                <input type="number" [(ngModel)]="project.points" name="points" class="date-input" min="0" max="100" required>
+                <input
+                  type="number"
+                  [(ngModel)]="project.points"
+                  name="points"
+                  class="date-input"
+                  min="0"
+                  max="100"
+                  required
+                  [readonly]="userRole === 'Student'"
+                />
               </div>
+        
               <div class="form-group" *ngIf="userRole === 'Mentor'">
                 <label>Student</label>
                 <div class="student-dropdown">
@@ -60,7 +110,11 @@
                     <span class="dropdown-arrow">▼</span>
                   </div>
                   <div class="dropdown-menu" *ngIf="showStudentDropdown">
-                    <div class="dropdown-item" *ngFor="let student of students" (click)="selectStudent(student)">
+                    <div
+                      class="dropdown-item"
+                      *ngFor="let student of students"
+                      (click)="selectStudent(student)"
+                    >
                       {{ student.name }} {{ student.surname }}
                     </div>
                   </div>
@@ -68,7 +122,7 @@
               </div>
             </div>
           </div>
-        </form>
+        </form>        
       </div>
     </div>
   </div>

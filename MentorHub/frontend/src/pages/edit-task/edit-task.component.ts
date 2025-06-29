@@ -6,6 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { jwtDecode } from 'jwt-decode';
 import { SidebarComponent } from '../../components/sidebar/sidebar.component';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
+import { SnackbarService } from '../../services/snackbar.service';
 
 
 interface DecodedToken {
@@ -35,6 +36,8 @@ export class EditTaskComponent {
   showStudentDropdown = false;
   studentId:string = '';
   projectId: string='';
+  taskId:string='';
+  chosenStudentId:string='';
 
   get selectedStudentName(): string {
     const student = this.students.find(s => s.id === this.task.assignedStudentId);
@@ -44,13 +47,15 @@ export class EditTaskComponent {
   constructor(
     private route: ActivatedRoute,
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private snackbar: SnackbarService
   ) {}
 
   ngOnInit() {
     this.projectId = this.route.snapshot.params['id'];
+    this.taskId =this.route.snapshot.params['taskId']
     this.loadUserRoleFromTokenAndStudents();
-    this.loadProject(this.projectId);
+    this.loadProject(this.taskId);
   }
 
   loadProject(id: string) {
@@ -104,13 +109,17 @@ export class EditTaskComponent {
   onSubmit() {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    
-    this.http.put(`https://localhost:7035/api/tasks/${this.task.id}`, this.task, { headers })
+    this.task.status = Number(this.task.status);
+    console.log(this.task);
+    this.http.put(`https://localhost:7035/api/tasks/${this.taskId}`, this.task, { headers })
       .subscribe({
         next: () => {
+          this.snackbar.showSuccess('Task updated successfully!')
+
           this.router.navigate([`/task/${this.projectId}/${this.task.id}`]);
         },
-        error: (error) => console.error('Error updating project:', error)
+        error: (error) => this.snackbar.showError('Failed to update task.')
+
       });
   }
 

@@ -100,14 +100,22 @@
   
   
   .date-input, .link-input {
-    width: 90%;
+    width: 50%;
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 4px;
   }
+
+  input[readonly],
+textarea[readonly] {
+  background-color: #efefef;
+  cursor: not-allowed;
+}
+
   
   .student-dropdown {
     position: relative;
+    width: 55%;
   }
   
   .selected-student {

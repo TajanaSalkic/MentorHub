@@ -9,5 +9,7 @@ namespace Backend.Features.Tasks.GetTaskById
     {
         public string Message { get; set; }
         public Models.Task Task { get; init; }
+
+        public long UserId { get; set; }
     }
 }

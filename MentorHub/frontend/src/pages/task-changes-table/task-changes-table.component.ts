@@ -34,6 +34,7 @@ export class TaskChangesTableComponent {
     
       this.http.get<any>(`https://localhost:7035/api/user/${this.projectId}/projects-taskchanges`, { headers }).subscribe({
         next: (response) => {
+          console.log(response);
           const base64Pdf = response.pdfContent;
     
           const byteCharacters = atob(base64Pdf);
@@ -47,7 +48,7 @@ export class TaskChangesTableComponent {
           const blobUrl = window.URL.createObjectURL(blob);
           const a = document.createElement('a');
           a.href = blobUrl;
-          a.download = `${response.filename}`;
+          a.download = `${response.fileName}`;
           a.click();
     
           window.URL.revokeObjectURL(blobUrl);

@@ -60,6 +60,6 @@ export class SidebarComponent {
   }
 
   home(){
-    this.router.navigate(['/home']);
+    this.router.navigate([`/project/${this.projectId}`]);
   }
 }

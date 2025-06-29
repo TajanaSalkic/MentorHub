@@ -69,8 +69,8 @@ namespace Backend.Features.Tasks.UpdateTask
 
             task.Title = request.Title ?? task.Title;
             task.Description = request.Description ?? task.Description;
-            task.StartDate = request.StartDate ?? task.StartDate;
-            task.EndDate = request.EndDate ?? task.EndDate;
+            task.StartDate = request.StartDate?.ToUniversalTime() ?? task.StartDate;
+            task.EndDate = request.EndDate?.ToUniversalTime() ?? task.EndDate;
             task.Status = request.Status ?? task.Status;
             task.Points = request.Points ?? task.Points;
 

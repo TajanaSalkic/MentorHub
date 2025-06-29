@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Backend.Migrations
 {
     /// <inheritdoc />
-    public partial class LastMigration : Migration
+    public partial class FinalMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -37,7 +37,7 @@ namespace Backend.Migrations
                     EndDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Status = table.Column<int>(type: "integer", nullable: false),
                     Points = table.Column<double>(type: "double precision", nullable: false),
-                    Url = table.Column<string>(type: "text", nullable: false)
+                    Url = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {

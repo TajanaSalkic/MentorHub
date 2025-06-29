@@ -4,6 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { SidebarComponent } from '../../components/sidebar/sidebar.component';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
+import { jwtDecode } from 'jwt-decode';
 
 export enum ProjectStatus {
   Planning = 0,
@@ -22,6 +23,7 @@ export enum ProjectStatus {
 export class ProjectDashboardComponent implements OnInit {
   project: any = {};
   projectId: number = 0;
+  userRole: string = '';
   
   constructor(
     private route: ActivatedRoute,
@@ -34,6 +36,16 @@ export class ProjectDashboardComponent implements OnInit {
       this.projectId = +params['id'];
       this.fetchProjectDetails(this.projectId);
     });
+
+    const token = localStorage.getItem('token');
+    if (token) {
+      try {
+        const decoded: any = jwtDecode(token);
+        this.userRole = decoded.role || '';
+      } catch (e) {
+        this.userRole = '';
+      }
+    }
   }
 
   fetchProjectDetails(id: number) {

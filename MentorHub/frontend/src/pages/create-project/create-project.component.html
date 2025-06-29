@@ -39,7 +39,10 @@
                 
                 <div class="form-group">
                   <label>Start date</label>
-                  <input type="date" formControlName="startDate" class="date-input">
+                  <input type="date"
+                         formControlName="startDate"
+                         class="date-input"
+                         [min]="todayString">
                   <div class="error" *ngIf="projectForm.get('startDate')?.touched && projectForm.get('startDate')?.hasError('required')">
                     Start date is required.
                   </div>
@@ -47,11 +50,15 @@
                 
                 <div class="form-group">
                   <label>End date</label>
-                  <input type="date" formControlName="endDate" class="date-input">
+                  <input type="date"
+                         formControlName="endDate"
+                         class="date-input"
+                         [min]="tomorrowString">
                   <div class="error" *ngIf="projectForm.get('endDate')?.touched && projectForm.get('endDate')?.hasError('required')">
                     End date is required.
                   </div>
                 </div>
+                
 
                 
                 

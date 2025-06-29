@@ -137,7 +137,7 @@ button {
 }
 
 .approve-btn {
-  background-color: #4CAF50; /* green */
+  background-color: #4CAF50;
 }
 
 .approve-btn:hover {
@@ -145,7 +145,7 @@ button {
 }
 
 .disapprove-btn {
-  background-color: #F44336; /* red */
+  background-color: #F44336; 
 }
 
 .disapprove-btn:hover {

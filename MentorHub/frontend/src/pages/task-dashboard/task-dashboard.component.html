@@ -20,7 +20,6 @@
           <div class="detail-section">
             <div class="description-header">
               <h3>Description</h3>
-              
               <div class="task-actions">
                 <button class="edit-button" (click)="editTask(task.id)">✎</button>
                 <button class="delete-button" (click)="deleteTask(task.id)">-</button>
@@ -64,7 +63,7 @@
                   <button class="save-button" (click)="addComment()">Save</button>
                 </div>
               </div>
-            </div>      
+            </div>    
             <div class="comments-list">
               <div *ngFor="let comment of comments" class="comment-item">
                 <div class="comment-header">

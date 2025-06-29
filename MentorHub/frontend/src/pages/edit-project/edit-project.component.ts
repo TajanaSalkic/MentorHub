@@ -6,6 +6,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { SidebarComponent } from '../../components/sidebar/sidebar.component';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
 import { jwtDecode } from 'jwt-decode';
+import { SnackbarService } from '../../services/snackbar.service';
 
 @Component({
   selector: 'app-edit-project',
@@ -37,7 +38,8 @@ export class EditProjectComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private snackbar: SnackbarService
   ) {}
 
   ngOnInit() {
@@ -63,6 +65,8 @@ export class EditProjectComponent implements OnInit {
           }
 
           this.project = project;
+
+          this.project.userID = project.userID;
           console.log(this.project);
         },
         error: (error) => console.error('Error loading project:', error)
@@ -102,12 +106,15 @@ export class EditProjectComponent implements OnInit {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     this.project.studentID = this.project.userID;
+    console.log(this.project);
     this.http.put(`https://localhost:7035/api/projects/${this.project.id}`, this.project, { headers })
       .subscribe({
         next: () => {
-          this.router.navigate([`/project-dashboard/${this.project.id}`]);
+          this.snackbar.showSuccess('Project updated successfully!')
+          this.router.navigate([`/project/${this.project.id}`]);
         },
-        error: (error) => console.error('Error updating project:', error)
+        error: (error) => this.snackbar.showError('Failed to update project.')
+
       });
   }
 
@@ -115,8 +122,9 @@ export class EditProjectComponent implements OnInit {
     this.router.navigate(['/home']);
   }
 
-  selectStudent(student: any) {
-    this.project.userID = student.userID;
-    this.showStudentDropdown = false;
-  }
+    selectStudent(student: any) {
+      this.project.userID = student.id;
+      this.showStudentDropdown = false;
+    }
+
 } 

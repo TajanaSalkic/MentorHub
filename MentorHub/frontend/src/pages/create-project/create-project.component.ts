@@ -5,6 +5,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
 import { QuillModule } from 'ngx-quill';
+import { SnackbarService } from '../../services/snackbar.service';
 
 interface Student {
   id: number;
@@ -25,13 +26,15 @@ export class CreateProjectComponent implements OnInit {
   students: Student[] = [];
   showStudentDropdown = false;
   selectedStudent: Student | null = null;
-  
+  todayString: string = '';
+  tomorrowString: string = '';
   
 
   constructor(
     private fb: FormBuilder,
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private snackbar: SnackbarService
   ) {
     this.projectForm = this.fb.group({
       title: ['', Validators.required],
@@ -39,14 +42,29 @@ export class CreateProjectComponent implements OnInit {
       startDate: [this.formatDate(new Date()), Validators.required],
       endDate: [this.formatDate(new Date()), Validators.required],
       points: [0, [Validators.required, Validators.min(0)]],
-      url: ['', Validators.required],
+      url: [null],
       studentID: [null, Validators.required]
     });
   }
 
   ngOnInit(): void {
+    this.setDates();
     this.fetchStudents();
   }
+
+  setDates() {
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    this.todayString = this.formatDate(today);
+    this.tomorrowString = this.formatDate(tomorrow);
+
+    this.projectForm.patchValue({
+      startDate: this.todayString,
+      endDate: this.tomorrowString
+    });
+  }
+
 
   fetchStudents() {
     const token = localStorage.getItem('token');
@@ -91,10 +109,12 @@ export class CreateProjectComponent implements OnInit {
       
       this.http.post('https://localhost:7035/api/projects', formValue, { headers }).subscribe({
         next: (response) => {
+          this.snackbar.showSuccess('Project created successfully!')
           console.log('Project created successfully', response);
           this.router.navigate(['/home']);
         },
         error: (error) => {
+          this.snackbar.showError('Failed to create project.')
           console.error('Failed to create project', error);
         }
       });

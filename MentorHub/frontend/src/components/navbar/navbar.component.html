@@ -8,8 +8,9 @@
 
   <div class="dropdown-menu" *ngIf="dropdownVisible">
     <ul>
+      <li (click)="goToUsers()" *ngIf="userRole==='Admin'">Users</li>
       <li (click)="goToProjects()">Projects</li>
-      <li (click)="logout()">Logout</li>
+      <li (click)="logout()">Log out</li>
     </ul>
   </div>
 </header>

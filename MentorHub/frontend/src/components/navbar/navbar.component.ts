@@ -13,6 +13,7 @@ import { jwtDecode } from 'jwt-decode';
 export class NavbarComponent implements OnInit {
   userName: string = 'Guest';
   dropdownVisible: boolean = false; 
+  userRole:string='';
 
   constructor(private router: Router) {}
 
@@ -25,8 +26,7 @@ export class NavbarComponent implements OnInit {
     if (token) {
       try {
         const decodedToken: any = jwtDecode(token); 
-        console.log("Decodec",decodedToken);
-        console.log("Name", decodedToken.name);
+        this.userRole = decodedToken.role;
         this.userName = `${decodedToken.name} ${decodedToken.surname}`; 
       } catch (error) {
         console.error('Invalid token:', error);
@@ -47,6 +47,11 @@ export class NavbarComponent implements OnInit {
   logout() {
     localStorage.removeItem('token'); 
     this.router.navigate(['']); 
+  }
+
+  goToUsers() {
+    this.router.navigate(['/users/0']); 
+    this.toggleDropdown(); 
   }
 
   @HostListener('document:click', ['$event'])

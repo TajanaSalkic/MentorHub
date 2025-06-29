@@ -15,7 +15,6 @@ namespace Backend.Features.PDF.GeneratePDFReportTaskChanges
         private readonly ApplicationDbContext _context;
         private readonly IValidator<Command> _validator;
 
-
         public Handler(ApplicationDbContext context, IValidator<Command> validator)
         {
             _context = context;
@@ -26,7 +25,7 @@ namespace Backend.Features.PDF.GeneratePDFReportTaskChanges
             string userName,
             IEnumerable<Project> projects,
             Dictionary<long, IEnumerable<Models.Task>> projectTasks,
-            Dictionary<long, IEnumerable<Models.TaskChanges>> taskChanges)
+            List<TaskChangesDTO> taskChanges)
         {
             using (MemoryStream memoryStream = new MemoryStream())
             {
@@ -49,23 +48,23 @@ namespace Backend.Features.PDF.GeneratePDFReportTaskChanges
                     document.Add(new Paragraph($"Project: {project.Title}").SetFontSize(16));
 
                     Table projectTable = new Table(2).UseAllAvailableWidth();
-                    projectTable.AddCell(new Cell().Add(new Paragraph("ID")));
-                    projectTable.AddCell(new Cell().Add(new Paragraph(project.Id.ToString())));
+                    projectTable.AddCell("ID");
+                    projectTable.AddCell(project.Id.ToString());
 
-                    projectTable.AddCell(new Cell().Add(new Paragraph("Description")));
-                    projectTable.AddCell(new Cell().Add(new Paragraph(project.Description)));
+                    projectTable.AddCell("Description");
+                    projectTable.AddCell(project.Description);
 
-                    projectTable.AddCell(new Cell().Add(new Paragraph("Start Date")));
-                    projectTable.AddCell(new Cell().Add(new Paragraph(project.StartDate.ToString("yyyy-MM-dd"))));
+                    projectTable.AddCell("Start Date");
+                    projectTable.AddCell(project.StartDate.ToString("yyyy-MM-dd"));
 
-                    projectTable.AddCell(new Cell().Add(new Paragraph("End Date")));
-                    projectTable.AddCell(new Cell().Add(new Paragraph(project.EndDate.ToString("yyyy-MM-dd"))));
+                    projectTable.AddCell("End Date");
+                    projectTable.AddCell(project.EndDate.ToString("yyyy-MM-dd"));
 
-                    projectTable.AddCell(new Cell().Add(new Paragraph("Status")));
-                    projectTable.AddCell(new Cell().Add(new Paragraph(project.Status.ToString())));
+                    projectTable.AddCell("Status");
+                    projectTable.AddCell(project.Status.ToString());
 
-                    projectTable.AddCell(new Cell().Add(new Paragraph("Points")));
-                    projectTable.AddCell(new Cell().Add(new Paragraph(project.Points.ToString())));
+                    projectTable.AddCell("Points");
+                    projectTable.AddCell(project.Points.ToString());
 
                     document.Add(projectTable);
                     document.Add(new Paragraph("\n"));
@@ -75,42 +74,57 @@ namespace Backend.Features.PDF.GeneratePDFReportTaskChanges
                         document.Add(new Paragraph("Tasks:").SetFontSize(14));
 
                         Table taskTable = new Table(5).UseAllAvailableWidth();
-                        taskTable.AddHeaderCell(new Cell().Add(new Paragraph("Task ID")));
-                        taskTable.AddHeaderCell(new Cell().Add(new Paragraph("Title")));
-                        taskTable.AddHeaderCell(new Cell().Add(new Paragraph("Status")));
-                        taskTable.AddHeaderCell(new Cell().Add(new Paragraph("Points")));
-                        taskTable.AddHeaderCell(new Cell().Add(new Paragraph("Deadline")));
+                        taskTable.AddHeaderCell("Task ID");
+                        taskTable.AddHeaderCell("Title");
+                        taskTable.AddHeaderCell("Status");
+                        taskTable.AddHeaderCell("Points");
+                        taskTable.AddHeaderCell("Deadline");
 
                         foreach (var task in projectTasks[project.Id])
                         {
-                            taskTable.AddCell(new Cell().Add(new Paragraph(task.Id.ToString())));
-                            taskTable.AddCell(new Cell().Add(new Paragraph(task.Title)));
-                            taskTable.AddCell(new Cell().Add(new Paragraph(task.Status.ToString())));
-                            taskTable.AddCell(new Cell().Add(new Paragraph(task.Points.ToString())));
-                            taskTable.AddCell(new Cell().Add(new Paragraph(task.EndDate.ToString("yyyy-MM-dd"))));
+                            taskTable.AddCell(task.Id.ToString());
+                            taskTable.AddCell(task.Title);
+                            taskTable.AddCell(task.Status.ToString());
+                            taskTable.AddCell(task.Points.ToString());
+                            taskTable.AddCell(task.EndDate.ToString("yyyy-MM-dd"));
+                        }
 
-                            document.Add(taskTable);
+                        document.Add(taskTable);
+                        document.Add(new Paragraph("\n"));
 
-                            if (taskChanges.ContainsKey(task.Id) && taskChanges[task.Id].Any())
+                        var taskIds = projectTasks[project.Id].Select(t => t.Id).ToHashSet();
+                        var changesForProject = taskChanges
+                            .Where(c => taskIds.Contains(c.TaskID))
+                            .OrderBy(c => c.ChangedAt)
+                            .ToList();
+
+                        if (changesForProject.Any())
+                        {
+                            document.Add(new Paragraph("Task Change History:").SetFontSize(14));
+
+                            Table changeTable = new Table(8).UseAllAvailableWidth();
+                            changeTable.AddHeaderCell("ChangeID");
+                            changeTable.AddHeaderCell("Task ID");
+                            changeTable.AddHeaderCell("Task Title");
+                            changeTable.AddHeaderCell("Date");
+                            changeTable.AddHeaderCell("Changed Field");
+                            changeTable.AddHeaderCell("Old Value");
+                            changeTable.AddHeaderCell("New Value");
+                            changeTable.AddHeaderCell("Changed By");
+
+                            foreach (var change in changesForProject)
                             {
-                                document.Add(new Paragraph("Task Change History:").SetFontSize(12));
-
-                                Table changeTable = new Table(4).UseAllAvailableWidth();
-                                changeTable.AddHeaderCell(new Cell().Add(new Paragraph("Date")));
-                                changeTable.AddHeaderCell(new Cell().Add(new Paragraph("Changed Field")));
-                                changeTable.AddHeaderCell(new Cell().Add(new Paragraph("Old Value")));
-                                changeTable.AddHeaderCell(new Cell().Add(new Paragraph("New Value")));
-
-                                foreach (var change in taskChanges[task.Id])
-                                {
-                                    changeTable.AddCell(new Cell().Add(new Paragraph(change.ChangedAt.ToString("yyyy-MM-dd HH:mm"))));
-                                    changeTable.AddCell(new Cell().Add(new Paragraph(change.FieldChanged)));
-                                    changeTable.AddCell(new Cell().Add(new Paragraph(change.OldValue)));
-                                    changeTable.AddCell(new Cell().Add(new Paragraph(change.NewValue)));
-                                }
-
-                                document.Add(changeTable);
+                                changeTable.AddCell(change.ChangeID.ToString());
+                                changeTable.AddCell(change.TaskID.ToString());
+                                changeTable.AddCell(change.Title);
+                                changeTable.AddCell(change.ChangedAt.ToString("yyyy-MM-dd HH:mm"));
+                                changeTable.AddCell(change.FieldChanged);
+                                changeTable.AddCell(change.OldValue);
+                                changeTable.AddCell(change.NewValue);
+                                changeTable.AddCell($"{change.Name} {change.Surname}");
                             }
+
+                            document.Add(changeTable);
                         }
                     }
                     else
@@ -135,19 +149,19 @@ namespace Backend.Features.PDF.GeneratePDFReportTaskChanges
             }
 
             var projectExists = await _context.Projects
-    .Include(p => p.TaskProjectUsers)
-        .ThenInclude(tpu => tpu.User) 
-    .FirstOrDefaultAsync(p => p.Id == request.ProjectId, cancellationToken);
-
-            var user = projectExists?.TaskProjectUsers
-                .Where(tpu => tpu.Project_ID== request.ProjectId && tpu.Creator==false) 
-                .Select(tpu => tpu.User)
-                .FirstOrDefault();
+                .Include(p => p.TaskProjectUsers)
+                    .ThenInclude(tpu => tpu.User)
+                .FirstOrDefaultAsync(p => p.Id == request.ProjectId, cancellationToken);
 
             if (projectExists == null)
             {
-                throw new KeyNotFoundException($"User with ID {request.ProjectId} not found.");
+                throw new KeyNotFoundException($"Project with ID {request.ProjectId} not found.");
             }
+
+            var user = projectExists.TaskProjectUsers
+                .Where(tpu => tpu.Project_ID == request.ProjectId && tpu.Creator == false)
+                .Select(tpu => tpu.User)
+                .FirstOrDefault();
 
             var projects = await _context.Task_Projects
                 .Where(tp => tp.Project_ID == request.ProjectId)
@@ -157,8 +171,6 @@ namespace Backend.Features.PDF.GeneratePDFReportTaskChanges
                 .ToListAsync(cancellationToken);
 
             var projectTasks = new Dictionary<long, IEnumerable<Models.Task>>();
-            var taskChanges = new Dictionary<long, IEnumerable<Models.TaskChanges>>();
-
             foreach (var project in projects)
             {
                 var tasks = await _context.Task_Projects
@@ -168,19 +180,30 @@ namespace Backend.Features.PDF.GeneratePDFReportTaskChanges
                     .ToListAsync(cancellationToken);
 
                 projectTasks[project.Id] = tasks;
-
-                foreach (var task in tasks)
-                {
-                    var changes = await _context.TaskChanges
-                        .Where(tc => tc.TaskID == task.Id)
-                        .OrderBy(tc => tc.ChangedAt)
-                        .ToListAsync(cancellationToken);
-
-                    taskChanges[task.Id] = changes;
-                }
             }
 
-            var userName = $"{user.Name} {user.Surname}";
+            var taskChanges = await _context.TaskChanges
+                .Where(tc => _context.Task_Projects
+                    .Where(tp => tp.Project_ID == request.ProjectId)
+                    .Select(tp => tp.Task_ID)
+                    .Contains(tc.TaskID))
+                .OrderBy(tc => tc.ChangedAt)
+                .Select(tc => new TaskChangesDTO
+                {
+                    ChangeID = tc.ChangeID,
+                    UserID = tc.UserID,
+                    Name = tc.User.Name,
+                    Surname = tc.User.Surname,
+                    TaskID = tc.TaskID,
+                    Title = tc.Task.Title,
+                    ChangedAt = tc.ChangedAt,
+                    FieldChanged = tc.FieldChanged,
+                    OldValue = tc.OldValue,
+                    NewValue = tc.NewValue,
+                })
+                .ToListAsync(cancellationToken);
+
+            var userName = $"{user?.Name} {user?.Surname}";
             var pdfContent = GenerateUserProjectsReport(userName, projects, projectTasks, taskChanges);
 
             return new Response
@@ -190,4 +213,5 @@ namespace Backend.Features.PDF.GeneratePDFReportTaskChanges
             };
         }
     }
+
 }

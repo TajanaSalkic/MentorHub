@@ -48,20 +48,7 @@
                   <label>Points</label>
                   <input type="number" [(ngModel)]="task.points" name="points" class="date-input" min="0" max="100" required>
                 </div>
-                <div class="form-group" *ngIf="userRole === 'Mentor'">
-                  <label>Student</label>
-                  <div class="student-dropdown">
-                    <div class="selected-student" (click)="showStudentDropdown = !showStudentDropdown">
-                      {{ selectedStudentName }}
-                      <span class="dropdown-arrow">▼</span>
-                    </div>
-                    <div class="dropdown-menu" *ngIf="showStudentDropdown">
-                      <div class="dropdown-item" *ngFor="let student of students" (click)="selectStudent(student)">
-                        {{ student.name }} {{ student.surname }}
-                      </div>
-                    </div>
-                  </div>
-                </div>
+               
               </div>
             </div>
           </form>

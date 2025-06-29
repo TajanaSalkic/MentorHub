@@ -129,7 +129,6 @@ namespace Backend.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Url")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
